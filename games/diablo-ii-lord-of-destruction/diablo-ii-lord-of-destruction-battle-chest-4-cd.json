@@ -1,0 +1,152 @@
+{
+  "id": 93157,
+  "game_slug": "diablo-ii-lord-of-destruction",
+  "name": "Diablo II: Lord of Destruction",
+  "year": 2001,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "diablo-ii-lord-of-destruction-battle-chest-4-cd",
+  "version": "Battle Chest 4 CD",
+  "description": "This installs both Diablo II and Diablo II: Lord of Destruction (v1.12) from the 4 CDs. Install script provides patch options: v1.12, v1.13c, or v1.14d.",
+  "notes": "This edition requires 26-character CD-keys, one for Diablo II and one for Diablo II: Lord of Destruction.\r\n\r\n1. Rip all 4 CDs\r\n2. Mount all 4 CDs\r\n3. Run the installer\r\n4. When Diablo II installation completes, exit the installer to continue.\r\n5. When Diablo II: Lord of Destruction completes, exit the installer to continue.\r\n6. Select patch version from the drop-down menu.\r\n7. If patch was applied it will auto-start the game. Exit the game to complete the installation.",
+  "created_at": "2022-10-16T06:48:25.458783Z",
+  "draft": false,
+  "published": false,
+  "rating": "",
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humblestoreid": "",
+  "script": {
+    "files": [
+      {
+        "patch113c": "http://ftp.blizzard.com/pub/diablo2exp/patches/PC/LODPatch_113c.exe"
+      },
+      {
+        "patch114d": "http://ftp.blizzard.com/pub/diablo2exp/patches/PC/LODPatch_114d.exe"
+      }
+    ],
+    "game": {
+      "arch": "win64",
+      "exe": "$GAMEDIR/$gamepath/Diablo II.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "merge": {
+          "dst": "$CACHE/patch113c",
+          "src": "patch113c"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Verifying LODPatch_113c.exe (patch v1.13c) sha256 checksum...\"; afunc() { [ $(sha256sum \"$patch113c\" | cut -c 1-64) = $patch113c_sha256 ]; }; afunc;"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] LODPatch_113c.exe checksum OK\""
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/patch114d",
+          "src": "patch114d"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Verifying LODPatch_114d.exe (patch v1.14d) sha256 checksum...\"; afunc() { [ $(sha256sum \"$patch114d\" | cut -c 1-64) = $patch114d_sha256 ]; }; afunc;"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] LODPatch_114d.exe checksum OK\""
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "install_gecko": false,
+          "install_mono": false,
+          "name": "create_prefix",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../Diablo II Disc 1/installer tome.mpq"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../Diablo II Disc 2/installer tome 2.mpq"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../Diablo II Disc 3/installer tome 3.mpq"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "$DISC/../Diablo II Disc 1/installer.exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../Diablo II LOD/installer tome.mpq"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "$DISC/../Diablo II LOD/installer.exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "input_menu": {
+          "description": "Choose the game's patch version:",
+          "id": "PATCHVER",
+          "options": [
+            {
+              "112": "Keep the currently installed version (1.12)"
+            },
+            {
+              "113c": "Install the 1.13c patch"
+            },
+            {
+              "114d": "Install the 1.14d patch"
+            }
+          ],
+          "preselect": "114d"
+        }
+      },
+      {
+        "execute": {
+          "command": "if [ \"$INPUT\" = \"112\" ]; then echo \"[INFO] Keeping version 1.12\"; else echo \"[INFO] Installing LODPatch_$INPUT.exe\"; WINEPREFIX=$GAMEDIR WINEARCH=win64 $WINEBIN \"$CACHE/patch$INPUT/LODPatch_$INPUT.exe\"; fi"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum",
+    "variables": {
+      "gamepath": "drive_c/Program Files (x86)/Diablo II",
+      "patch113c_sha256": "2301158bb44062094e8dbfbe40dde6f20f870fc88190975c34379280e7aef781",
+      "patch114d_sha256": "5ee5b6f09c338324db14ea3ec03a4b8a9b36e4eea249bb12f1fb592558d6434d"
+    },
+    "wine": {
+      "dgvoodoo2": true
+    }
+  },
+  "content": "files:\n- patch113c: http://ftp.blizzard.com/pub/diablo2exp/patches/PC/LODPatch_113c.exe\n- patch114d: http://ftp.blizzard.com/pub/diablo2exp/patches/PC/LODPatch_114d.exe\ngame:\n  arch: win64\n  exe: $GAMEDIR/$gamepath/Diablo II.exe\n  prefix: $GAMEDIR\ninstaller:\n- merge:\n    dst: $CACHE/patch113c\n    src: patch113c\n- execute:\n    command: echo \"[INFO] Verifying LODPatch_113c.exe (patch v1.13c) sha256 checksum...\";\n      afunc() { [ $(sha256sum \"$patch113c\" | cut -c 1-64) = $patch113c_sha256 ]; };\n      afunc;\n- execute:\n    command: echo \"[INFO] LODPatch_113c.exe checksum OK\"\n- merge:\n    dst: $CACHE/patch114d\n    src: patch114d\n- execute:\n    command: echo \"[INFO] Verifying LODPatch_114d.exe (patch v1.14d) sha256 checksum...\";\n      afunc() { [ $(sha256sum \"$patch114d\" | cut -c 1-64) = $patch114d_sha256 ]; };\n      afunc;\n- execute:\n    command: echo \"[INFO] LODPatch_114d.exe checksum OK\"\n- task:\n    arch: win64\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- insert-disc:\n    requires: ../Diablo II Disc 1/installer tome.mpq\n- insert-disc:\n    requires: ../Diablo II Disc 2/installer tome 2.mpq\n- insert-disc:\n    requires: ../Diablo II Disc 3/installer tome 3.mpq\n- task:\n    arch: win64\n    executable: $DISC/../Diablo II Disc 1/installer.exe\n    name: wineexec\n    prefix: $GAMEDIR\n- insert-disc:\n    requires: ../Diablo II LOD/installer tome.mpq\n- task:\n    arch: win64\n    executable: $DISC/../Diablo II LOD/installer.exe\n    name: wineexec\n    prefix: $GAMEDIR\n- input_menu:\n    description: 'Choose the game''s patch version:'\n    id: PATCHVER\n    options:\n    - 112: Keep the currently installed version (1.12)\n    - 113c: Install the 1.13c patch\n    - 114d: Install the 1.14d patch\n    preselect: 114d\n- execute:\n    command: if [ \"$INPUT\" = \"112\" ]; then echo \"[INFO] Keeping version 1.12\"; else\n      echo \"[INFO] Installing LODPatch_$INPUT.exe\"; WINEPREFIX=$GAMEDIR WINEARCH=win64\n      $WINEBIN \"$CACHE/patch$INPUT/LODPatch_$INPUT.exe\"; fi\nrequire-binaries: sha256sum\nvariables:\n  gamepath: drive_c/Program Files (x86)/Diablo II\n  patch113c_sha256: 2301158bb44062094e8dbfbe40dde6f20f870fc88190975c34379280e7aef781\n  patch114d_sha256: 5ee5b6f09c338324db14ea3ec03a4b8a9b36e4eea249bb12f1fb592558d6434d\nwine:\n  dgvoodoo2: true\n",
+  "reason": "",
+  "review": "",
+  "comment": "[submission] diablo-ii-lord-of-destruction-battle-chest-4-cd by dblblaster on 2022-10-16 06:48:25.458849+00:00",
+  "installer_id": 35682,
+  "revision_id": 93031
+}

@@ -1,0 +1,127 @@
+{
+  "id": 93114,
+  "game_slug": "starcraft-brood-war",
+  "name": "Starcraft: Brood War",
+  "year": 1998,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "starcraft-brood-war-battle-chest-2-cd",
+  "version": "Battle Chest 2 CD",
+  "description": "Installs both StarCraft and StartCraft: Brood War. Patches to 1.16.1.",
+  "notes": "Installer will automatically install both StartCraft and StarCraft: Brood War\r\n\r\n1. Rip both CDs\r\n2. Mount both CDs\r\n3. Proceed with installation\r\n4. The script will find the 1st CD and start the installer executable\r\n5. The installer will automatically find the 2nd CD\r\n6. Patch 1.16.1 will install next, when it finishes it will automatically open the readme. Close the readme and patcher window to continue and complete the installation.",
+  "created_at": "2022-10-15T09:59:31.347530Z",
+  "draft": false,
+  "published": false,
+  "rating": "",
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humblestoreid": "",
+  "script": {
+    "files": [
+      {
+        "patch1161": "https://web.archive.org/web/20140908015808/http://ftp.blizzard.com/pub/starcraft/patches/PC/SC-1161.exe"
+      },
+      {
+        "cncddraw": "https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip"
+      }
+    ],
+    "game": {
+      "arch": "win64",
+      "exe": "$GAMEDIR/$gamepath/StarCraft.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "merge": {
+          "dst": "$CACHE/patch1161",
+          "src": "patch1161"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Verifying SC-1161.exe (patch v1.16.1) sha256 checksum...\"; afunc() { [ $(sha256sum \"$patch1161\" | cut -c 1-64) = $patch1161_sha256 ]; }; afunc;"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] SC-1161.exe checksum OK\""
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/cncddraw",
+          "src": "cncddraw"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Verifying cnc-ddraw.zip (v4.6.0.0) sha256 checksum...\"; afunc() { [ $(sha256sum \"$cncddraw\" | cut -c 1-64) = $cncddraw_sha256 ]; }; afunc;"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] cnc-ddraw.zip checksum OK\""
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "Installer Tome.mpq"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "install_gecko": false,
+          "install_mono": false,
+          "name": "create_prefix",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "$DISC/StarCraft (Windows).exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "patch1161",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$GAMEDIR/$gamepath",
+          "src": "cncddraw"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Disabling battle.net updater (bnupdate.exe renamed to bnupdate.exe.disabled)...\"; mv \"$GAMEDIR/$gamepath/bnupdate.exe\" \"$GAMEDIR/$gamepath/bnupdate.exe.disabled\""
+        }
+      }
+    ],
+    "require-binaries": "sha256sum",
+    "variables": {
+      "cncddraw_sha256": "1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac",
+      "gamepath": "drive_c/Program Files (x86)/StarCraft",
+      "patch1161_sha256": "755b4dbe3f8a928831b19bfa975445885b8c1760ffa4e5a795d37e7f02e6c31e"
+    },
+    "wine": {
+      "overrides": {
+        "ddraw.dll": "n"
+      }
+    }
+  },
+  "content": "files:\n- patch1161: https://web.archive.org/web/20140908015808/http://ftp.blizzard.com/pub/starcraft/patches/PC/SC-1161.exe\n- cncddraw: https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip\ngame:\n  arch: win64\n  exe: $GAMEDIR/$gamepath/StarCraft.exe\n  prefix: $GAMEDIR\ninstaller:\n- merge:\n    dst: $CACHE/patch1161\n    src: patch1161\n- execute:\n    command: echo \"[INFO] Verifying SC-1161.exe (patch v1.16.1) sha256 checksum...\";\n      afunc() { [ $(sha256sum \"$patch1161\" | cut -c 1-64) = $patch1161_sha256 ]; };\n      afunc;\n- execute:\n    command: echo \"[INFO] SC-1161.exe checksum OK\"\n- merge:\n    dst: $CACHE/cncddraw\n    src: cncddraw\n- execute:\n    command: echo \"[INFO] Verifying cnc-ddraw.zip (v4.6.0.0) sha256 checksum...\";\n      afunc() { [ $(sha256sum \"$cncddraw\" | cut -c 1-64) = $cncddraw_sha256 ]; };\n      afunc;\n- execute:\n    command: echo \"[INFO] cnc-ddraw.zip checksum OK\"\n- insert-disc:\n    requires: Installer Tome.mpq\n- task:\n    arch: win64\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- task:\n    arch: win64\n    executable: $DISC/StarCraft (Windows).exe\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win64\n    executable: patch1161\n    name: wineexec\n    prefix: $GAMEDIR\n- extract:\n    dst: $GAMEDIR/$gamepath\n    src: cncddraw\n- execute:\n    command: echo \"[INFO] Disabling battle.net updater (bnupdate.exe renamed to bnupdate.exe.disabled)...\";\n      mv \"$GAMEDIR/$gamepath/bnupdate.exe\" \"$GAMEDIR/$gamepath/bnupdate.exe.disabled\"\nrequire-binaries: sha256sum\nvariables:\n  cncddraw_sha256: 1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac\n  gamepath: drive_c/Program Files (x86)/StarCraft\n  patch1161_sha256: 755b4dbe3f8a928831b19bfa975445885b8c1760ffa4e5a795d37e7f02e6c31e\nwine:\n  overrides:\n    ddraw.dll: n\n",
+  "reason": "",
+  "review": "",
+  "comment": "[submission] starcraft-brood-war-battle-chest-2-cd by dblblaster on 2022-10-15 09:59:31.347591+00:00",
+  "installer_id": 35618,
+  "revision_id": 92988
+}

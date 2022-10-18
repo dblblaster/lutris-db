@@ -1,0 +1,47 @@
+{
+  "id": 93112,
+  "game_slug": "discworld",
+  "name": "Discworld",
+  "year": 1995,
+  "user": "dblblaster",
+  "runner": "scummvm",
+  "slug": "discworld-cd-v2",
+  "version": "CD v2",
+  "description": "The PC CD-ROM Version 2. Discworld: The Directors Cut.",
+  "notes": "Doesn't require any patches, this version shipped with all bugs fixed.\r\n\r\nVersion information: https://www.us.lspace.org/games/discworld/faq.html#part2.3",
+  "created_at": "2022-10-15T09:55:11.659462Z",
+  "draft": false,
+  "published": false,
+  "rating": "",
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humblestoreid": "",
+  "script": {
+    "game": {
+      "game_id": "tinsel:dw",
+      "path": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "insert-disc": {
+          "requires": "../DISCWORLD/dwu.exe"
+        }
+      },
+      {
+        "execute": {
+          "command": "cp \"$DISC/../DISCWORLD/discwld/{*.idx,*.scn, *.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}\" \"$GAMEDIR/\""
+        }
+      }
+    ],
+    "scummvm": {
+      "fullscreen": true
+    }
+  },
+  "content": "game:\n  game_id: tinsel:dw\n  path: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../DISCWORLD/dwu.exe\n- execute:\n    command: cp \"$DISC/../DISCWORLD/discwld/{*.idx,*.scn, *.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}\"\n      \"$GAMEDIR/\"\nscummvm:\n  fullscreen: true\n",
+  "reason": "",
+  "review": "",
+  "comment": "[submission] discworld-cd-v2 by dblblaster on 2022-10-15 09:55:11.659525+00:00",
+  "installer_id": 35665,
+  "revision_id": 92986
+}

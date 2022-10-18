@@ -1,0 +1,226 @@
+### url
+
+https://lutris.net/api/installers/games/half-life-opposing-force/revisions/93109
+
+### game_slug
+
+half-life-opposing-force
+
+### runner
+
+wine
+
+### version
+
+CD v1.0.0.x
+
+### description
+
+This installs and updates the game to the last World Opponent Network (WON) non-Steam version. Installs the CD version of the game and rips audio tracks to .mp3 files in game folder. Patches Half-Life to v1.1.1.0 and Opposing Force to v1.1.0.9. Applies community resolution/FoV/mp3 patch v1.1.2.
+
+### notes
+
+```
+Game patches can be found inside this archive (1.58 GB): https://www.moddb.com/games/counter-strike/downloads/half-life-updates-pre-post-1100
+Download it once and keep it at hand, installer script will ask for it.
+
+Community resolution/FoV/mp3 patch v1.1.2 can be found here: https://www.moddb.com/downloads/half-life-won-resolution-fov-mp3-patch
+Download it once and keep it at hand, installer script will ask for it.
+
+Installer script will first verify that you got the correct files. It will then proceed to install the game and apply patches in correct sequence according to instructions from the 1st archive.
+
+Note: When Opposing Force installation completes it will attempt to update the game and fail saying the game is not installed. That's OK, just continue.
+
+Important note: Half-Life patch 1.1.0.7 (big lambda sign on installer background) will detect Opposing Force and attempt to update it. Then, the updater will say that existing version is newer and ask whether to install anyway. Say NO here, and just continue to install everything else.
+
+Run the game with Default OpenGL driver (3dfx mini doesn't work good with wine and the installer script will disable it) and select resolution to match your Desktop, e.g. run it with game args:
+-full -gl -gldrv Default -width 1920 -height 1080 -console
+
+If you want to use Direct3D then you must run it in window mode, e.g.:
+-window -d3d -width 1920 -height 1080 -console
+because it is unstable in fullscreen mode.
+```
+
+### content
+
+```
+files:
+- patchpack1110: 'N/A: Please manually download Half-Life_Counter-Strike_Updates_Pre_1.1.0.0_Update_Archive.7z
+    (sha256: 6f63aba5ab0cd125db1488ec5275ade96911c4eb150837486bc25adf3d67964e)'
+- fovpatch112: 'N/A: Please manually download Half-Life_WON_Resolution_FOV_MP3_Patch_v1.1.2.zip
+    (sha256: 80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa)'
+game:
+  arch: win32
+  args: -game gearbox -full -gl -gldrv Default -width 1920 -height 1080 -console
+  exe: $GAMEDIR/$gamepath/hl.exe
+  prefix: $GAMEDIR
+installer:
+- insert-disc:
+    requires: ../OP_FOR/setup.exe
+- write_file:
+    content: '#!/bin/bash
+
+      cddevice=$(mount | grep -m 1 OP_FOR | grep -oE "/dev/\w+"); mkdir -p "$GAMEDIR/$gamepath/gearbox/media";
+      tracknames=("data" "Half-Life01.mp3" "Prospero01.mp3" "Half-Life12.mp3" "Half-Life07.mp3"
+      "Half-Life10.mp3" "Suspense01.mp3" "Suspense03.mp3" "Half-Life09.mp3" "Half-Life02.mp3"
+      "Half-Life13.mp3" "Half-Life04.mp3" "Half-Life15.mp3" "Half-Life14.mp3" "Half-Life16.mp3"
+      "Suspense02.mp3" "Half-Life03.mp3" "Half-Life08.mp3" "Prospero02.mp3" "Half-Life05.mp3"
+      "Prospero04.mp3" "Half-Life11.mp3" "Half-Life06.mp3" "Prospero03.mp3" "Half-Life17.mp3"
+      "Prospero05.mp3" "Suspense05.mp3" "Suspense07.mp3"); for i in {2..20}; do cdda2wav
+      -D "$cddevice" -t $i+$i - | lame -b 320 --id3v1-only - "$GAMEDIR/$gamepath/gearbox/media/${tracknames[$((i-1))]}";
+      done
+
+      '
+    file: $CACHE/ripaudio.sh
+- write_file:
+    content: '#!/bin/bash
+
+      file="$1"; hash="$2"; echo "[INFO] Verifying $(basename "$file") sha256 checksum...";
+      if [ $(sha256sum "$file" | cut -c 1-64) = "$hash" ]; then echo "[INFO] ...checksum
+      OK!"; else echo "[ERROR] ...checksum FAILED!"; exit 1; fi
+
+      '
+    file: $CACHE/checkhash.sh
+- execute:
+    args: +x $CACHE/checkhash.sh
+    file: chmod
+- merge:
+    dst: $CACHE/patchpack1110
+    src: patchpack1110
+- extract:
+    dst: $CACHE/patchpack1110/
+    file: patchpack1110
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe"
+      $patch1104_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To
+      V1.1.0.8/11041106.exe" $patch11041106_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To
+      V1.1.0.8/11061107.exe" $patch11061107_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To
+      V1.1.0.8/11071108.exe" $patch11071108_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To
+      V1.1.1.0/11081109.exe" $patch11081109_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To
+      V1.1.1.0/11091110.exe" $patch11091110_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force V1.1.0.6/of1106.exe"
+      $patchof1106_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force V1.1.0.8/of1108.exe"
+      $patchof1108_sha256'
+    file: $CACHE/checkhash.sh
+- execute:
+    args: $fovpatch112 $fovpatch112_sha256
+    file: $CACHE/checkhash.sh
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- execute:
+    args: +w $GAMEDIR/$solpath/ereg.dll
+    file: chmod
+- task:
+    arch: win32
+    executable: $DISC/../OP_FOR/setup.exe
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: $GAMEDIR/$gamepath/opforup.exe
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
+      V1.1.0.6/of1106.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11041106.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11061107.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11071108.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
+      V1.1.0.8/of1108.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
+      To V1.1.1.0/11081109.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- task:
+    arch: win32
+    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
+      To V1.1.1.0/11091110.exe"'
+    name: wineexec
+    prefix: $GAMEDIR
+- extract:
+    dst: $CACHE/fovpatch112/
+    file: fovpatch112
+- merge:
+    dst: $GAMEDIR/$gamepath
+    src: $CACHE/fovpatch112/Half-Life/1.1.1.0
+- execute:
+    args: $CACHE/ripaudio.sh
+    file: bash
+- move:
+    dst: $GAMEDIR/$gamepath/gldrv/drvmap.txt.disabled
+    src: $GAMEDIR/$gamepath/gldrv/drvmap.txt
+- write_file:
+    content: GL_texturemode GL_Nearest
+    file: $GAMEDIR/$gamepath/valve/autoexec.cfg
+- write_file:
+    content: GL_texturemode GL_Nearest
+    file: $GAMEDIR/$gamepath/gearbox/autoexec.cfg
+require-binaries: sha256sum
+requires: half-life
+variables:
+  fovpatch112_sha256: 80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa
+  gamepath: drive_c/SIERRA/Half-Life
+  patch11041106_sha256: 569c9af60a792df30778a46cd98872072e34736fc3a71515526df759be3ccf41
+  patch1104_sha256: 5c93a53000b53ca8ecdc4b821056022f304f9e044d38b931df6a52380ad69eac
+  patch11061107_sha256: f153b26d5ae42eb42ae6e1522bf97b68d19a1cc114a8e97242de1d0e2db003ec
+  patch11071108_sha256: 70c9831e440af01daa27038597180b7a6cdad2372aa618e80a8c150dd1e6a168
+  patch11081109_sha256: 3a8fbbc336e27c36927097f26fb31f2bb066f72fd771f06f6d21ffc6b79cf7f9
+  patch11091110_sha256: e5f0bfc96a63fc1ea699cf65ac9d087ea62695f26865921d7d2b60c23dfb98d7
+  patchof1106_sha256: 522a73aabecfc631f9a2ee67d37cdcf451425671b6ceac4ee8b1453696b7fe10
+  patchof1108_sha256: bed7f8425c27bd124bf36ae9993f07b6ee9a112765b9d351f29e8de57ec5f933
+  patchpack1110_sha256: 6f63aba5ab0cd125db1488ec5275ade96911c4eb150837486bc25adf3d67964e
+  solpath: drive_c/Program Files/Sierra On-Line
+wine:
+  Desktop: true
+  dgvoodoo2: true
+
+```
+

@@ -1,0 +1,94 @@
+{
+  "id": 93226,
+  "game_slug": "the-ultimate-doom",
+  "name": "The Ultimate Doom",
+  "year": 1995,
+  "user": "dblblaster",
+  "runner": "linux",
+  "slug": "the-ultimate-doom-doomwad-v19ud",
+  "version": "doom.wad (v1.9ud)",
+  "description": "Made to run using system's crispy-doom binary",
+  "notes": "Requires crispy-doom (https://github.com/fabiangreffrath/crispy-doom) package for your Linux distribution to be installed.\r\n\r\nVersion 1.9ud of the Ultimate Doom WAD is 12,408,292 bytes in size, is dated 1995-05-25, and contains 2,306 entries. It has the following hashes:\r\nHash type \tHash code\r\nMD5 \tc4fe9fd920207691a9f493668e0a2083\r\nSHA-1 \t9b07b02ab3c275a6a7570c3f73cc20d63a0e3833\r\nCRC-32 \tbf0eaac0 \r\nSource: https://doomwiki.org/wiki/DOOM.WAD",
+  "created_at": "2022-10-18T17:18:39.861584Z",
+  "draft": false,
+  "published": false,
+  "rating": "",
+  "steamid": 2280,
+  "gogid": 1440164514,
+  "gogslug": "the_ultimate_doom",
+  "humblestoreid": "",
+  "script": {
+    "files": [
+      {
+        "doomwad19ud": "N/A: Please provide doom.wad v1.9ud (sha256: 6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f)"
+      }
+    ],
+    "game": {
+      "exe": "$GAMEDIR/doom.sh"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/doomwad19ud",
+          "src": "doomwad19ud"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"doomwad19ud\" $doomwad19ud_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "command": "mkdir -p $GAMEDIR/wads"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$GAMEDIR/wads",
+          "src": "$CACHE/doomwad19ud"
+        }
+      },
+      {
+        "execute": {
+          "command": "mkdir -p $GAMEDIR/savegames/doom.wad"
+        }
+      },
+      {
+        "write_file": {
+          "content": "#!/bin/bash\ncrispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/doom.wad -savedir savegames/doom.wad $@\n",
+          "file": "$GAMEDIR/doom.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $GAMEDIR/doom.sh",
+          "file": "chmod"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum, crispy-doom",
+    "variables": {
+      "doomwad19ud_sha256": "6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f"
+    }
+  },
+  "content": "files:\n- doomwad19ud: 'N/A: Please provide doom.wad v1.9ud (sha256: 6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f)'\ngame:\n  exe: $GAMEDIR/doom.sh\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- merge:\n    dst: $CACHE/doomwad19ud\n    src: doomwad19ud\n- execute:\n    args: '\"doomwad19ud\" $doomwad19ud_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    command: mkdir -p $GAMEDIR/wads\n- merge:\n    dst: $GAMEDIR/wads\n    src: $CACHE/doomwad19ud\n- execute:\n    command: mkdir -p $GAMEDIR/savegames/doom.wad\n- write_file:\n    content: '#!/bin/bash\n\n      crispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/doom.wad\n      -savedir savegames/doom.wad $@\n\n      '\n    file: $GAMEDIR/doom.sh\n- execute:\n    args: +x $GAMEDIR/doom.sh\n    file: chmod\nrequire-binaries: sha256sum, crispy-doom\nvariables:\n  doomwad19ud_sha256: 6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f\n",
+  "reason": "",
+  "review": "",
+  "comment": "[submission] the-ultimate-doom-doomwad-v19ud by dblblaster on 2022-10-18 17:18:39.861639+00:00",
+  "installer_id": 35779,
+  "revision_id": 93100
+}

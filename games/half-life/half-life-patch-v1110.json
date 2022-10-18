@@ -1,0 +1,204 @@
+{
+  "id": 93234,
+  "game_slug": "half-life",
+  "name": "Half-Life",
+  "year": 1998,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "half-life-patch-v1110",
+  "version": "Patch v1.1.1.0",
+  "description": "This updates the game to the last World Opponent Network (WON) non-Steam version. Use only if you do not intend to install Half-Life: Opposing Force. Patches Half-Life to v1.1.1.0. Applies community resolution/FoV/mp3 patch v1.1.2.",
+  "notes": "Game patches can be found inside this archive (1.58 GB): https://www.moddb.com/games/counter-strike/downloads/half-life-updates-pre-post-1100\r\nDownload it once and keep it at hand, installer script will ask for it.\r\n\r\nCommunity resolution/FoV/mp3 patch v1.1.2 can be found here: https://www.moddb.com/downloads/half-life-won-resolution-fov-mp3-patch\r\nDownload it once and keep it at hand, installer script will ask for it.\r\n\r\nInstaller script will first verify that you got the correct files. It will then proceed to apply patches in correct sequence according to instructions from the 1st archive.\r\n\r\nRun the game with Default OpenGL driver (3dfx mini doesn't work good with wine and the installer script will disable it) and select resolution to match your Desktop, e.g. run it with game args:\r\n-full -gl -gldrv Default -width 1920 -height 1080 -console\r\n\r\nIf you want to use Direct3D then you must run it in window mode, e.g.:\r\n-window -d3d -width 1920 -height 1080 -console\r\nbecause it is unstable in fullscreen mode.",
+  "created_at": "2022-10-18T17:45:05.568271Z",
+  "draft": true,
+  "published": false,
+  "rating": "",
+  "steamid": 70,
+  "gogid": null,
+  "gogslug": "",
+  "humblestoreid": "",
+  "script": {
+    "extends": "half-life",
+    "files": [
+      {
+        "patchpack1110": "N/A: Please manually download Half-Life_Counter-Strike_Updates_Pre_1.1.0.0_Update_Archive.7z (sha256: 6f63aba5ab0cd125db1488ec5275ade96911c4eb150837486bc25adf3d67964e)"
+      },
+      {
+        "fovpatch112": "N/A: Please manually download Half-Life_WON_Resolution_FOV_MP3_Patch_v1.1.2.zip (sha256: 80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa)"
+      }
+    ],
+    "game": {
+      "arch": "win32",
+      "args": "-full -gl -gldrv Default -width 1920 -height 1080 -console",
+      "exe": "$GAMEDIR/$gamepath/hl.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/patchpack1110",
+          "src": "patchpack1110"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$CACHE/patchpack1110/",
+          "file": "patchpack1110"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe\" $patch1104_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11041106.exe\" $patch11041106_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11061107.exe\" $patch11061107_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11071108.exe\" $patch11071108_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To V1.1.1.0/11081109.exe\" $patch11081109_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To V1.1.1.0/11091110.exe\" $patch11091110_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/fovpatch112",
+          "src": "fovpatch112"
+        }
+      },
+      {
+        "execute": {
+          "args": "fovpatch112 fovpatch112_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11041106.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11061107.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To V1.1.0.8/11071108.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To V1.1.1.0/11081109.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "executable": "\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To V1.1.1.0/11091110.exe\"",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$CACHE/fovpatch112/",
+          "file": "fovpatch112"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$GAMEDIR/$gamepath",
+          "src": "$CACHE/fovpatch112/Half-Life/1.1.1.0"
+        }
+      },
+      {
+        "move": {
+          "dst": "$GAMEDIR/$gamepath/gldrv/drvmap.txt.disabled",
+          "src": "$GAMEDIR/$gamepath/gldrv/drvmap.txt"
+        }
+      },
+      {
+        "write_file": {
+          "content": "GL_texturemode GL_Nearest",
+          "file": "$GAMEDIR/$gamepath/valve/autoexec.cfg"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum",
+    "variables": {
+      "fovpatch112_sha256": "80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa",
+      "gamepath": "drive_c/SIERRA/Half-Life",
+      "patch11041106_sha256": "569c9af60a792df30778a46cd98872072e34736fc3a71515526df759be3ccf41",
+      "patch1104_sha256": "5c93a53000b53ca8ecdc4b821056022f304f9e044d38b931df6a52380ad69eac",
+      "patch11061107_sha256": "f153b26d5ae42eb42ae6e1522bf97b68d19a1cc114a8e97242de1d0e2db003ec",
+      "patch11071108_sha256": "70c9831e440af01daa27038597180b7a6cdad2372aa618e80a8c150dd1e6a168",
+      "patch11081109_sha256": "3a8fbbc336e27c36927097f26fb31f2bb066f72fd771f06f6d21ffc6b79cf7f9",
+      "patch11091110_sha256": "e5f0bfc96a63fc1ea699cf65ac9d087ea62695f26865921d7d2b60c23dfb98d7"
+    },
+    "wine": {
+      "Desktop": true,
+      "dgvoodoo2": true
+    }
+  },
+  "content": "extends: half-life\nfiles:\n- patchpack1110: 'N/A: Please manually download Half-Life_Counter-Strike_Updates_Pre_1.1.0.0_Update_Archive.7z\n    (sha256: 6f63aba5ab0cd125db1488ec5275ade96911c4eb150837486bc25adf3d67964e)'\n- fovpatch112: 'N/A: Please manually download Half-Life_WON_Resolution_FOV_MP3_Patch_v1.1.2.zip\n    (sha256: 80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa)'\ngame:\n  arch: win32\n  args: -full -gl -gldrv Default -width 1920 -height 1080 -console\n  exe: $GAMEDIR/$gamepath/hl.exe\n  prefix: $GAMEDIR\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- merge:\n    dst: $CACHE/patchpack1110\n    src: patchpack1110\n- extract:\n    dst: $CACHE/patchpack1110/\n    file: patchpack1110\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe\"\n      $patch1104_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To\n      V1.1.0.8/11041106.exe\" $patch11041106_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To\n      V1.1.0.8/11061107.exe\" $patch11061107_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4 To\n      V1.1.0.8/11071108.exe\" $patch11071108_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To\n      V1.1.1.0/11081109.exe\" $patch11081109_sha256'\n    file: $CACHE/checkhash.sh\n- execute:\n    args: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8 To\n      V1.1.1.0/11091110.exe\" $patch11091110_sha256'\n    file: $CACHE/checkhash.sh\n- merge:\n    dst: $CACHE/fovpatch112\n    src: fovpatch112\n- execute:\n    args: fovpatch112 fovpatch112_sha256\n    file: $CACHE/checkhash.sh\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4\n      To V1.1.0.8/11041106.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4\n      To V1.1.0.8/11061107.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4\n      To V1.1.0.8/11071108.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8\n      To V1.1.1.0/11081109.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: '\"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8\n      To V1.1.1.0/11091110.exe\"'\n    name: wineexec\n    prefix: $GAMEDIR\n- extract:\n    dst: $CACHE/fovpatch112/\n    file: fovpatch112\n- merge:\n    dst: $GAMEDIR/$gamepath\n    src: $CACHE/fovpatch112/Half-Life/1.1.1.0\n- move:\n    dst: $GAMEDIR/$gamepath/gldrv/drvmap.txt.disabled\n    src: $GAMEDIR/$gamepath/gldrv/drvmap.txt\n- write_file:\n    content: GL_texturemode GL_Nearest\n    file: $GAMEDIR/$gamepath/valve/autoexec.cfg\nrequire-binaries: sha256sum\nvariables:\n  fovpatch112_sha256: 80229881e6b70829a0486feb447a6e6e24261bd219ebfea05069b565081d7caa\n  gamepath: drive_c/SIERRA/Half-Life\n  patch11041106_sha256: 569c9af60a792df30778a46cd98872072e34736fc3a71515526df759be3ccf41\n  patch1104_sha256: 5c93a53000b53ca8ecdc4b821056022f304f9e044d38b931df6a52380ad69eac\n  patch11061107_sha256: f153b26d5ae42eb42ae6e1522bf97b68d19a1cc114a8e97242de1d0e2db003ec\n  patch11071108_sha256: 70c9831e440af01daa27038597180b7a6cdad2372aa618e80a8c150dd1e6a168\n  patch11081109_sha256: 3a8fbbc336e27c36927097f26fb31f2bb066f72fd771f06f6d21ffc6b79cf7f9\n  patch11091110_sha256: e5f0bfc96a63fc1ea699cf65ac9d087ea62695f26865921d7d2b60c23dfb98d7\nwine:\n  Desktop: true\n  dgvoodoo2: true\n",
+  "reason": "",
+  "review": "",
+  "comment": "[draft] half-life-patch-v1110 by dblblaster on 2022-10-18 17:45:05.568326+00:00",
+  "installer_id": 35725,
+  "revision_id": 93108
+}

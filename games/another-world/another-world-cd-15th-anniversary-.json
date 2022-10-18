@@ -1,0 +1,54 @@
+{
+  "id": 93240,
+  "game_slug": "another-world",
+  "name": "Another World",
+  "year": 1991,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "another-world-cd-15th-anniversary-",
+  "version": "CD 15th Anniversary Edition",
+  "description": "",
+  "notes": "",
+  "created_at": "2022-10-18T17:47:02.155360Z",
+  "draft": true,
+  "published": false,
+  "rating": "",
+  "steamid": 233550,
+  "gogid": 1207658845,
+  "gogslug": "another_world_20th_anniversary_edition",
+  "humblestoreid": "another-world-20th-anniversary-edition",
+  "script": {
+    "game": {
+      "arch": "win64",
+      "exe": "$GAMEDIR/$gamepath/Another World.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "insert-disc": {
+          "requires": "../Another World/AnotherWorld_full.exe"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "$DISC/../Another World/AnotherWorld_full.exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      }
+    ],
+    "variables": {
+      "gamepath": "drive_c/Program Files (x86)/Another World"
+    },
+    "wine": {
+      "Desktop": true
+    }
+  },
+  "content": "game:\n  arch: win64\n  exe: $GAMEDIR/$gamepath/Another World.exe\n  prefix: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../Another World/AnotherWorld_full.exe\n- task:\n    arch: win64\n    executable: $DISC/../Another World/AnotherWorld_full.exe\n    name: wineexec\n    prefix: $GAMEDIR\nvariables:\n  gamepath: drive_c/Program Files (x86)/Another World\nwine:\n  Desktop: true\n",
+  "reason": "",
+  "review": "",
+  "comment": "[draft] another-world-cd-15th-anniversary- by dblblaster on 2022-10-18 17:47:02.155418+00:00",
+  "installer_id": 35763,
+  "revision_id": 93114
+}
