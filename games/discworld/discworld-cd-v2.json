@@ -1,15 +1,15 @@
 {
-  "id": 93112,
+  "id": 93253,
   "game_slug": "discworld",
   "name": "Discworld",
   "year": 1995,
   "user": "dblblaster",
-  "runner": "scummvm",
+  "runner": "linux",
   "slug": "discworld-cd-v2",
   "version": "CD v2",
-  "description": "The PC CD-ROM Version 2. Discworld: The Directors Cut.",
-  "notes": "Doesn't require any patches, this version shipped with all bugs fixed.\r\n\r\nVersion information: https://www.us.lspace.org/games/discworld/faq.html#part2.3",
-  "created_at": "2022-10-15T09:55:11.659462Z",
+  "description": "Made to run using system's scummvm binary. Persistent scummvm config stored in game directory.",
+  "notes": "Requires scummvm (https://www.scummvm.org/) package for your Linux distribution to be installed.\r\n\r\nDoesn't require any patches, this version (CD v2, Discworld: The Directors Cut) shipped with all bugs fixed.\r\nVersion information: https://www.us.lspace.org/games/discworld/faq.html#part2.3",
+  "created_at": "2022-10-18T20:29:45.360428Z",
   "draft": false,
   "published": false,
   "rating": "",
@@ -19,10 +19,32 @@
   "humblestoreid": "",
   "script": {
     "game": {
-      "game_id": "tinsel:dw",
-      "path": "$GAMEDIR"
+      "args": "--fullscreen $scummlabel",
+      "exe": "$GAMEDIR/$scummlabel.sh"
     },
     "installer": [
+      {
+        "execute": {
+          "command": "mkdir -p $GAMEDIR/gamefiles"
+        }
+      },
+      {
+        "execute": {
+          "command": "mkdir -p $GAMEDIR/savegames"
+        }
+      },
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n",
+          "file": "$GAMEDIR/$scummlabel.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $GAMEDIR/$scummlabel.sh",
+          "file": "chmod"
+        }
+      },
       {
         "insert-disc": {
           "requires": "../DISCWORLD/dwu.exe"
@@ -30,18 +52,20 @@
       },
       {
         "execute": {
-          "command": "cp \"$DISC/../DISCWORLD/discwld/{*.idx,*.scn, *.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}\" \"$GAMEDIR/\""
+          "command": "cp \"$DISC/../DISCWORLD/discwld/\"{*.idx,*.scn,*.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl} \"$GAMEDIR/gamefiles/\""
         }
       }
     ],
-    "scummvm": {
-      "fullscreen": true
+    "require-binaries": "scummvm",
+    "variables": {
+      "scummid": "tinsel:dw",
+      "scummlabel": "dw-cd"
     }
   },
-  "content": "game:\n  game_id: tinsel:dw\n  path: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../DISCWORLD/dwu.exe\n- execute:\n    command: cp \"$DISC/../DISCWORLD/discwld/{*.idx,*.scn, *.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}\"\n      \"$GAMEDIR/\"\nscummvm:\n  fullscreen: true\n",
+  "content": "game:\n  args: --fullscreen $scummlabel\n  exe: $GAMEDIR/$scummlabel.sh\ninstaller:\n- execute:\n    command: mkdir -p $GAMEDIR/gamefiles\n- execute:\n    command: mkdir -p $GAMEDIR/savegames\n- write_file:\n    content: '#!/bin/bash\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n\n      '\n    file: $GAMEDIR/$scummlabel.sh\n- execute:\n    args: +x $GAMEDIR/$scummlabel.sh\n    file: chmod\n- insert-disc:\n    requires: ../DISCWORLD/dwu.exe\n- execute:\n    command: cp \"$DISC/../DISCWORLD/discwld/\"{*.idx,*.scn,*.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}\n      \"$GAMEDIR/gamefiles/\"\nrequire-binaries: scummvm\nvariables:\n  scummid: tinsel:dw\n  scummlabel: dw-cd\n",
   "reason": "",
   "review": "",
-  "comment": "[submission] discworld-cd-v2 by dblblaster on 2022-10-15 09:55:11.659525+00:00",
+  "comment": "[submission] discworld-cd-v2 by dblblaster on 2022-10-18 20:29:45.360491+00:00",
   "installer_id": 35665,
-  "revision_id": 92986
+  "revision_id": 93127
 }

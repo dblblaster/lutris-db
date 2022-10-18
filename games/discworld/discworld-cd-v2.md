@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/discworld/revisions/92986
+https://lutris.net/api/installers/games/discworld/revisions/93127
 
 ### game_slug
 
@@ -8,7 +8,7 @@ discworld
 
 ### runner
 
-scummvm
+linux
 
 ### version
 
@@ -16,13 +16,14 @@ CD v2
 
 ### description
 
-The PC CD-ROM Version 2. Discworld: The Directors Cut.
+Made to run using system's scummvm binary. Persistent scummvm config stored in game directory.
 
 ### notes
 
 ```
-Doesn't require any patches, this version shipped with all bugs fixed.
+Requires scummvm (https://www.scummvm.org/) package for your Linux distribution to be installed.
 
+Doesn't require any patches, this version (CD v2, Discworld: The Directors Cut) shipped with all bugs fixed.
 Version information: https://www.us.lspace.org/games/discworld/faq.html#part2.3
 ```
 
@@ -30,16 +31,34 @@ Version information: https://www.us.lspace.org/games/discworld/faq.html#part2.3
 
 ```
 game:
-  game_id: tinsel:dw
-  path: $GAMEDIR
+  args: --fullscreen $scummlabel
+  exe: $GAMEDIR/$scummlabel.sh
 installer:
+- execute:
+    command: mkdir -p $GAMEDIR/gamefiles
+- execute:
+    command: mkdir -p $GAMEDIR/savegames
+- write_file:
+    content: '#!/bin/bash
+
+      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid
+
+      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@
+
+      '
+    file: $GAMEDIR/$scummlabel.sh
+- execute:
+    args: +x $GAMEDIR/$scummlabel.sh
+    file: chmod
 - insert-disc:
     requires: ../DISCWORLD/dwu.exe
 - execute:
-    command: cp "$DISC/../DISCWORLD/discwld/{*.idx,*.scn, *.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}"
-      "$GAMEDIR/"
-scummvm:
-  fullscreen: true
+    command: cp "$DISC/../DISCWORLD/discwld/"{*.idx,*.scn,*.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}
+      "$GAMEDIR/gamefiles/"
+require-binaries: scummvm
+variables:
+  scummid: tinsel:dw
+  scummlabel: dw-cd
 
 ```
 
