@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/half-life-opposing-force/revisions/93109
+https://lutris.net/api/installers/half-life-opposing-force-cd-v100x
 
 ### game_slug
 
@@ -21,6 +21,8 @@ This installs and updates the game to the last World Opponent Network (WON) non-
 ### notes
 
 ```
+Requires Half-Life v1.0.0.x to be already installed. For best results use lutris:half-life-cd-v100x (https://lutris.net/api/installers/half-life-cd-v100x) prior to running this installer.
+
 Game patches can be found inside this archive (1.58 GB): https://www.moddb.com/games/counter-strike/downloads/half-life-updates-pre-post-1100
 Download it once and keep it at hand, installer script will ask for it.
 
@@ -39,6 +41,18 @@ Run the game with Default OpenGL driver (3dfx mini doesn't work good with wine a
 If you want to use Direct3D then you must run it in window mode, e.g.:
 -window -d3d -width 1920 -height 1080 -console
 because it is unstable in fullscreen mode.
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
@@ -84,9 +98,6 @@ installer:
 - execute:
     args: +x $CACHE/checkhash.sh
     file: chmod
-- merge:
-    dst: $CACHE/patchpack1110
-    src: patchpack1110
 - extract:
     dst: $CACHE/patchpack1110/
     file: patchpack1110
@@ -127,7 +138,7 @@ installer:
     file: $CACHE/checkhash.sh
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4/hl1104.exe
     name: wineexec
     prefix: $GAMEDIR
 - execute:
@@ -145,44 +156,44 @@ installer:
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
-      V1.1.0.6/of1106.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
+      V1.1.0.6/of1106.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
-      To V1.1.0.8/11041106.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11041106.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
-      To V1.1.0.8/11061107.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11061107.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
-      To V1.1.0.8/11071108.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.4
+      To V1.1.0.8/11071108.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
-      V1.1.0.8/of1108.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Opposing Force/Opposing Force
+      V1.1.0.8/of1108.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
-      To V1.1.1.0/11081109.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
+      To V1.1.1.0/11081109.exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
     arch: win32
-    executable: '"$CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
-      To V1.1.1.0/11091110.exe"'
+    executable: $CACHE/patchpack1110/Official Updates/Half-Life/Half-Life V1.1.0.8
+      To V1.1.1.0/11091110.exe
     name: wineexec
     prefix: $GAMEDIR
 - extract:

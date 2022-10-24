@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/doom-ii-hell-on-earth/revisions/93101
+https://lutris.net/api/installers/doom-ii-hell-on-earth-v19-doom2wad
 
 ### game_slug
 
@@ -12,11 +12,11 @@ linux
 
 ### version
 
-doom2.wad (v1.9)
+v1.9 doom2.wad
 
 ### description
 
-Made to run using system's crispy-doom binary
+Creates launcher script that uses system's crispy-doom binary and stores persistent config in game directory.
 
 ### notes
 
@@ -31,11 +31,23 @@ CRC-32 	ec8725db
 Source: https://doomwiki.org/wiki/DOOM2.WAD
 ```
 
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
+```
+
 ### content
 
 ```
 files:
-- doom2wad19: 'N/A: Please provide doom2.wad v1.9 (sha256: 10d67824b11025ddd9198e8cfc87ca335ee6e2d3e63af4180fa9b8a471893255)'
+- doom2wad19: 'N/A: Please provide v1.9 doom2.wad (sha256: 10d67824b11025ddd9198e8cfc87ca335ee6e2d3e63af4180fa9b8a471893255)'
 game:
   exe: $GAMEDIR/doom2.sh
 installer:
@@ -55,15 +67,17 @@ installer:
     dst: $CACHE/doom2wad19
     src: doom2wad19
 - execute:
-    args: '"doom2wad19" $doom2wad19_sha256'
+    args: doom2wad19 $doom2wad19_sha256
     file: $CACHE/checkhash.sh
 - execute:
-    command: mkdir -p $GAMEDIR/wads
+    args: -p $GAMEDIR/wads
+    file: mkdir
 - merge:
     dst: $GAMEDIR/wads
     src: $CACHE/doom2wad19
 - execute:
-    command: mkdir -p $GAMEDIR/savegames/doom2.wad
+    args: -p $GAMEDIR/savegames/doom2.wad
+    file: mkdir
 - write_file:
     content: '#!/bin/bash
 
@@ -75,6 +89,7 @@ installer:
 - execute:
     args: +x $GAMEDIR/doom2.sh
     file: chmod
+require-binaries: sha256sum, crispy-doom
 variables:
   doom2wad19_sha256: 10d67824b11025ddd9198e8cfc87ca335ee6e2d3e63af4180fa9b8a471893255
 

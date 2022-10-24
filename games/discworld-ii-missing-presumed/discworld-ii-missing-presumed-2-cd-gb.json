@@ -1,0 +1,96 @@
+{
+  "id": 35793,
+  "game_id": 11827,
+  "game_slug": "discworld-ii-missing-presumed",
+  "name": "Discworld II: Missing Presumed...!?",
+  "year": 1996,
+  "user": "dblblaster",
+  "runner": "linux",
+  "slug": "discworld-ii-missing-presumed-2-cd-gb",
+  "version": "2 CD (GB)",
+  "description": "Creates launcher script that uses system's scummvm binary and stores persistent config in game directory.",
+  "notes": "Requires scummvm (https://www.scummvm.org/) package for your Linux distribution to be installed.",
+  "credits": "",
+  "created_at": "2022-10-19T10:20:38.337454Z",
+  "updated_at": "2022-10-19T10:20:38.337476Z",
+  "draft": false,
+  "published": false,
+  "published_by": null,
+  "rating": "",
+  "is_playable": null,
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humbleid": "",
+  "humblestoreid": "",
+  "humblestoreid_real": "",
+  "script": {
+    "game": {
+      "args": "--fullscreen $scummlabel",
+      "exe": "$GAMEDIR/$scummlabel.sh"
+    },
+    "installer": [
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/gamefiles",
+          "file": "mkdir"
+        }
+      },
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/savegames",
+          "file": "mkdir"
+        }
+      },
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n",
+          "file": "$GAMEDIR/$scummlabel.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $GAMEDIR/$scummlabel.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../DW2CD1_ENG/dw2win.exe"
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -n \"$DISC/../DW2CD1_ENG/dw2/\"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk} \"$GAMEDIR/gamefiles/\""
+        }
+      },
+      {
+        "execute": {
+          "command": "for i in \"$DISC/../DW2CD1_ENG/dw2/\"english.*; do cp -n \"$i\" \"$GAMEDIR/gamefiles/english1.$(basename \"$i\" | cut -d. -f2)\"; done"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../DW2_CD1_ENG/dw2win.exe"
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -n \"$DISC/../DW2_CD1_ENG/dw2/\"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk} \"$GAMEDIR/gamefiles/\""
+        }
+      },
+      {
+        "execute": {
+          "command": "for i in \"$DISC/../DW2_CD1_ENG/dw2/\"english.*; do cp -n \"$i\" \"$GAMEDIR/gamefiles/english2.$(basename \"$i\" | cut -d. -f2)\"; done"
+        }
+      }
+    ],
+    "require-binaries": "scummvm",
+    "variables": {
+      "scummid": "tinsel:dw2",
+      "scummlabel": "dw2-gb"
+    }
+  },
+  "content": "game:\n  args: --fullscreen $scummlabel\n  exe: $GAMEDIR/$scummlabel.sh\ninstaller:\n- execute:\n    args: -p $GAMEDIR/gamefiles\n    file: mkdir\n- execute:\n    args: -p $GAMEDIR/savegames\n    file: mkdir\n- write_file:\n    content: '#!/bin/bash\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n\n      '\n    file: $GAMEDIR/$scummlabel.sh\n- execute:\n    args: +x $GAMEDIR/$scummlabel.sh\n    file: chmod\n- insert-disc:\n    requires: ../DW2CD1_ENG/dw2win.exe\n- execute:\n    command: cp -n \"$DISC/../DW2CD1_ENG/dw2/\"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk}\n      \"$GAMEDIR/gamefiles/\"\n- execute:\n    command: for i in \"$DISC/../DW2CD1_ENG/dw2/\"english.*; do cp -n \"$i\" \"$GAMEDIR/gamefiles/english1.$(basename\n      \"$i\" | cut -d. -f2)\"; done\n- insert-disc:\n    requires: ../DW2_CD1_ENG/dw2win.exe\n- execute:\n    command: cp -n \"$DISC/../DW2_CD1_ENG/dw2/\"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk}\n      \"$GAMEDIR/gamefiles/\"\n- execute:\n    command: for i in \"$DISC/../DW2_CD1_ENG/dw2/\"english.*; do cp -n \"$i\" \"$GAMEDIR/gamefiles/english2.$(basename\n      \"$i\" | cut -d. -f2)\"; done\nrequire-binaries: scummvm\nvariables:\n  scummid: tinsel:dw2\n  scummlabel: dw2-gb\n",
+  "discord_id": ""
+}

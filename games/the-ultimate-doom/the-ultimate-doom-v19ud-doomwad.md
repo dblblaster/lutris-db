@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/the-ultimate-doom/revisions/93100
+https://lutris.net/api/installers/the-ultimate-doom-v19ud-doomwad
 
 ### game_slug
 
@@ -12,11 +12,11 @@ linux
 
 ### version
 
-doom.wad (v1.9ud)
+v1.9ud doom.wad
 
 ### description
 
-Made to run using system's crispy-doom binary
+Creates launcher script that uses system's crispy-doom binary and stores persistent config in game directory.
 
 ### notes
 
@@ -31,11 +31,23 @@ CRC-32 	bf0eaac0
 Source: https://doomwiki.org/wiki/DOOM.WAD
 ```
 
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
+```
+
 ### content
 
 ```
 files:
-- doomwad19ud: 'N/A: Please provide doom.wad v1.9ud (sha256: 6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f)'
+- doomwad19ud: 'N/A: Please provide v1.9ud doom.wad (sha256: 6fdf361847b46228cfebd9f3af09cd844282ac75f3edbb61ca4cb27103ce2e7f)'
 game:
   exe: $GAMEDIR/doom.sh
 installer:
@@ -55,15 +67,17 @@ installer:
     dst: $CACHE/doomwad19ud
     src: doomwad19ud
 - execute:
-    args: '"doomwad19ud" $doomwad19ud_sha256'
+    args: doomwad19ud $doomwad19ud_sha256
     file: $CACHE/checkhash.sh
 - execute:
-    command: mkdir -p $GAMEDIR/wads
+    args: -p $GAMEDIR/wads
+    file: mkdir
 - merge:
     dst: $GAMEDIR/wads
     src: $CACHE/doomwad19ud
 - execute:
-    command: mkdir -p $GAMEDIR/savegames/doom.wad
+    args: -p $GAMEDIR/savegames/doom.wad
+    file: mkdir
 - write_file:
     content: '#!/bin/bash
 

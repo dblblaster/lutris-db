@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/starcraft-brood-war/revisions/92988
+https://lutris.net/api/installers/starcraft-brood-war-battle-chest-2-cd
 
 ### game_slug
 
@@ -21,14 +21,24 @@ Installs both StarCraft and StartCraft: Brood War. Patches to 1.16.1.
 ### notes
 
 ```
-Installer will automatically install both StartCraft and StarCraft: Brood War
+This edition requires a 26-character CD-key.
 
 1. Rip both CDs
 2. Mount both CDs
 3. Proceed with installation
-4. The script will find the 1st CD and start the installer executable
-5. The installer will automatically find the 2nd CD
-6. Patch 1.16.1 will install next, when it finishes it will automatically open the readme. Close the readme and patcher window to continue and complete the installation.
+4. When patch 1.16.1 completes installation it will automatically start the game. Exit the game to complete the installation.
+```
+
+### credits
+
+```
+Runs smooth thanks to https://github.com/FunkyFr3sh/cnc-ddraw
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
@@ -42,26 +52,28 @@ game:
   exe: $GAMEDIR/$gamepath/StarCraft.exe
   prefix: $GAMEDIR
 installer:
-- merge:
-    dst: $CACHE/patch1161
-    src: patch1161
+- write_file:
+    content: '#!/bin/bash
+
+      file="$1"; hash="$2"; echo "[INFO] Verifying $(basename "$file") sha256 checksum...";
+      if [ $(sha256sum "$file" | cut -c 1-64) = "$hash" ]; then echo "[INFO] ...checksum
+      OK!"; else echo "[ERROR] ...checksum FAILED!"; exit 1; fi
+
+      '
+    file: $CACHE/checkhash.sh
 - execute:
-    command: echo "[INFO] Verifying SC-1161.exe (patch v1.16.1) sha256 checksum...";
-      afunc() { [ $(sha256sum "$patch1161" | cut -c 1-64) = $patch1161_sha256 ]; };
-      afunc;
+    args: +x $CACHE/checkhash.sh
+    file: chmod
 - execute:
-    command: echo "[INFO] SC-1161.exe checksum OK"
-- merge:
-    dst: $CACHE/cncddraw
-    src: cncddraw
+    args: patch1161 $patch1161_sha256
+    file: $CACHE/checkhash.sh
 - execute:
-    command: echo "[INFO] Verifying cnc-ddraw.zip (v4.6.0.0) sha256 checksum...";
-      afunc() { [ $(sha256sum "$cncddraw" | cut -c 1-64) = $cncddraw_sha256 ]; };
-      afunc;
-- execute:
-    command: echo "[INFO] cnc-ddraw.zip checksum OK"
+    args: cncddraw $cncddraw_sha256
+    file: $CACHE/checkhash.sh
 - insert-disc:
-    requires: Installer Tome.mpq
+    requires: ../SCDisc1/Installer Tome.mpq
+- insert-disc:
+    requires: ../SCDisc2/Installer Tome 2.mpq
 - task:
     arch: win64
     install_gecko: false
@@ -70,7 +82,7 @@ installer:
     prefix: $GAMEDIR
 - task:
     arch: win64
-    executable: $DISC/StarCraft (Windows).exe
+    executable: $DISC/../SCDisc1/StarCraft (Windows).exe
     name: wineexec
     prefix: $GAMEDIR
 - task:
@@ -81,9 +93,6 @@ installer:
 - extract:
     dst: $GAMEDIR/$gamepath
     src: cncddraw
-- execute:
-    command: echo "[INFO] Disabling battle.net updater (bnupdate.exe renamed to bnupdate.exe.disabled)...";
-      mv "$GAMEDIR/$gamepath/bnupdate.exe" "$GAMEDIR/$gamepath/bnupdate.exe.disabled"
 require-binaries: sha256sum
 variables:
   cncddraw_sha256: 1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac

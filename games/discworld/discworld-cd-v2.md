@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/discworld/revisions/93127
+https://lutris.net/api/installers/discworld-cd-v2
 
 ### game_slug
 
@@ -16,7 +16,7 @@ CD v2
 
 ### description
 
-Made to run using system's scummvm binary. Persistent scummvm config stored in game directory.
+Creates launcher script that uses system's scummvm binary and stores persistent config in game directory.
 
 ### notes
 
@@ -27,6 +27,18 @@ Doesn't require any patches, this version (CD v2, Discworld: The Directors Cut) 
 Version information: https://www.us.lspace.org/games/discworld/faq.html#part2.3
 ```
 
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
+```
+
 ### content
 
 ```
@@ -35,9 +47,11 @@ game:
   exe: $GAMEDIR/$scummlabel.sh
 installer:
 - execute:
-    command: mkdir -p $GAMEDIR/gamefiles
+    args: -p $GAMEDIR/gamefiles
+    file: mkdir
 - execute:
-    command: mkdir -p $GAMEDIR/savegames
+    args: -p $GAMEDIR/savegames
+    file: mkdir
 - write_file:
     content: '#!/bin/bash
 
@@ -53,7 +67,7 @@ installer:
 - insert-disc:
     requires: ../DISCWORLD/dwu.exe
 - execute:
-    command: cp "$DISC/../DISCWORLD/discwld/"{*.idx,*.scn,*.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}
+    command: cp -rn "$DISC/../DISCWORLD/discwld/"{*.idx,*.scn,*.smp,*.txt,midi.dat,index,../drivers/sample.ad,../drivers/sample.opl}
       "$GAMEDIR/gamefiles/"
 require-binaries: scummvm
 variables:

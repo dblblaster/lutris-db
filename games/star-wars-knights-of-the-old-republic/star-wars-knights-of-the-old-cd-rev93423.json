@@ -1,0 +1,145 @@
+{
+  "id": 93549,
+  "game_slug": "star-wars-knights-of-the-old-republic",
+  "name": "Star Wars: Knights of the Old Republic",
+  "year": 2003,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "star-wars-knights-of-the-old-cd",
+  "version": "CD",
+  "description": "Patches to v1.03 and applies nocd patch.",
+  "notes": "1. Rip all 4 CDs\r\n2. Mount all 4 CDs\r\n3. Proceed with installation\r\n4. The script will find the 1st CD and start the installer executable\r\n5. When prompted for the next CD, select the matching Wine virtual drive letter\r\n6. Uncheck \"View ReadMe-KotOR.txt\" and \"Play Star Wars...\" boxes before clicking \"Finish\".\r\n7. Patch v1.03 will install next, when it finishes it will automatically open the readme. Close the readme and patcher window to continue and complete the installation.\r\n\r\nNote: The downloaded nocd patch (18KB) is applied using bspatch. The patch will modify the installed swkotor.exe to match the GoG nocd version (resulting swkotor.exe sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435).",
+  "created_at": "2022-10-24T12:11:59.190068Z",
+  "draft": false,
+  "published": true,
+  "rating": "",
+  "steamid": 32370,
+  "gogid": 1207666283,
+  "gogslug": "star_wars_knights_of_the_old_republic",
+  "humblestoreid": "",
+  "script": {
+    "files": [
+      {
+        "patch103": "http://static.dolimg.com/mh_netstorage/lucasfilm/patches/pc/SWKotOR1_03.exe"
+      },
+      {
+        "nocdpatch_b64": "https://www.klgrth.io/paste/e9bf5/raw"
+      }
+    ],
+    "game": {
+      "arch": "win64",
+      "exe": "$GAMEDIR/$gamepath/swkotor.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "execute": {
+          "args": "patch103 $patch103_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Preparing binary patch (18KB) for swkotor.exe...\"; base64 -d <(cat \"$nocdpatch_b64\") > \"$CACHE/nocdpatch_b64/nocdpatch.bin\";"
+        }
+      },
+      {
+        "execute": {
+          "args": "$CACHE/nocdpatch_b64/nocdpatch.bin $nocdpatch_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../KOTOR_1/ReadMe-KotOR.txt"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../KOTOR_2/data3.cab"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../KOTOR_3/data4.cab"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../KOTOR_4/data5.cab"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "install_gecko": false,
+          "install_mono": false,
+          "name": "create_prefix",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "$DISC/../KOTOR_1/Setup.exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "arch": "win64",
+          "executable": "patch103",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Applying nocd patch to generate gog nocd swkotor.exe (v1.03)...\"; bspatch \"$GAMEDIR/$gamepath/swkotor.exe\" \"$CACHE/swkotor.exe\" \"$CACHE/nocdpatch_b64/nocdpatch.bin\";"
+        }
+      },
+      {
+        "execute": {
+          "args": "$CACHE/swkotor.exe $swkotor_gog_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] Overwriting installed swkotor.exe with patched swkotor.exe...\" mv \"$GAMEDIR/$gamepath/swkotor.exe\" \"$CACHE/swkotor.bak\"; mv \"$CACHE/swkotor.exe\" \"$GAMEDIR/$gamepath/swkotor.exe\";"
+        }
+      },
+      {
+        "execute": {
+          "command": "echo \"[INFO] patched swkotor.exe copied successfully.\"; echo \"[INFO] Installation complete.\";"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum, base64, bspatch",
+    "variables": {
+      "gamepath": "drive_c/Program Files/LucasArts/SWKotOR",
+      "nocdpatch_sha256": "898f12d67bba8370912b22e0acf0dd5dc3989f6dbe0a8ce1657de4d3341be0f4",
+      "patch103_sha256": "5192318ff9ae87b09f385a151ef32c00ba31e954c054ab68ade401d8f4c51c5a",
+      "swkotor_gog_sha256": "9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435"
+    }
+  },
+  "content": "files:\n- patch103: http://static.dolimg.com/mh_netstorage/lucasfilm/patches/pc/SWKotOR1_03.exe\n- nocdpatch_b64: https://www.klgrth.io/paste/e9bf5/raw\ngame:\n  arch: win64\n  exe: $GAMEDIR/$gamepath/swkotor.exe\n  prefix: $GAMEDIR\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- execute:\n    args: patch103 $patch103_sha256\n    file: $CACHE/checkhash.sh\n- execute:\n    command: echo \"[INFO] Preparing binary patch (18KB) for swkotor.exe...\"; base64\n      -d <(cat \"$nocdpatch_b64\") > \"$CACHE/nocdpatch_b64/nocdpatch.bin\";\n- execute:\n    args: $CACHE/nocdpatch_b64/nocdpatch.bin $nocdpatch_sha256\n    file: $CACHE/checkhash.sh\n- insert-disc:\n    requires: ../KOTOR_1/ReadMe-KotOR.txt\n- insert-disc:\n    requires: ../KOTOR_2/data3.cab\n- insert-disc:\n    requires: ../KOTOR_3/data4.cab\n- insert-disc:\n    requires: ../KOTOR_4/data5.cab\n- task:\n    arch: win64\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- task:\n    arch: win64\n    executable: $DISC/../KOTOR_1/Setup.exe\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    arch: win64\n    executable: patch103\n    name: wineexec\n    prefix: $GAMEDIR\n- execute:\n    command: echo \"[INFO] Applying nocd patch to generate gog nocd swkotor.exe (v1.03)...\";\n      bspatch \"$GAMEDIR/$gamepath/swkotor.exe\" \"$CACHE/swkotor.exe\" \"$CACHE/nocdpatch_b64/nocdpatch.bin\";\n- execute:\n    args: $CACHE/swkotor.exe $swkotor_gog_sha256\n    file: $CACHE/checkhash.sh\n- execute:\n    command: echo \"[INFO] Overwriting installed swkotor.exe with patched swkotor.exe...\"\n      mv \"$GAMEDIR/$gamepath/swkotor.exe\" \"$CACHE/swkotor.bak\"; mv \"$CACHE/swkotor.exe\"\n      \"$GAMEDIR/$gamepath/swkotor.exe\";\n- execute:\n    command: echo \"[INFO] patched swkotor.exe copied successfully.\"; echo \"[INFO]\n      Installation complete.\";\nrequire-binaries: sha256sum, base64, bspatch\nvariables:\n  gamepath: drive_c/Program Files/LucasArts/SWKotOR\n  nocdpatch_sha256: 898f12d67bba8370912b22e0acf0dd5dc3989f6dbe0a8ce1657de4d3341be0f4\n  patch103_sha256: 5192318ff9ae87b09f385a151ef32c00ba31e954c054ab68ade401d8f4c51c5a\n  swkotor_gog_sha256: 9c10e0450a6eeca417e036e3cde7474fed1f0a92aab018446d156944dea91435\n",
+  "reason": "Tidy up hash checking, check for presence of all 4 CDs",
+  "review": "",
+  "comment": "[submission] star-wars-knights-of-the-old-cd by dblblaster on 2022-10-24 12:11:59.190130+00:00",
+  "installer_id": 35616,
+  "revision_id": 93423
+}

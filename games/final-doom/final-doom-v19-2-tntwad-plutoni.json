@@ -1,0 +1,138 @@
+{
+  "id": 35798,
+  "game_id": 126,
+  "game_slug": "final-doom",
+  "name": "Final Doom",
+  "year": 1996,
+  "user": "dblblaster",
+  "runner": "linux",
+  "slug": "final-doom-v19-2-tntwad-plutoni",
+  "version": "v1.9-2 tnt.wad & plutonia.wad",
+  "description": "Creates launcher script that uses system's crispy-doom binary and stores persistent config in game directory. Provides launcher options for both tnt.wad and plutonia.wad.",
+  "notes": "Requires crispy-doom (https://github.com/fabiangreffrath/crispy-doom) package for your Linux distribution to be installed.\r\n\r\nNotes for tnt.wad\r\n\r\nA slightly different, and rarer, version is found on some, but not all, id Anthology discs as well as the Macintosh version of Final Doom. This alternate version of the IWAD is also the one available for purchase from GOG.com. This version does not have the yellow keycard bug, and has a few changes in MAP10. Unfortunately, there is no revision change between both versions so it is also called v1.9. It is 18,654,796 bytes in size, contains 3,106 entries, it is dated 1996-11-14 and has the following hashes:\r\nHash type \tHash code\r\nMD5 \t1d39e405bf6ee3df69a8d2646c8d5c49\r\nSHA-1 \t4a65c8b960225505187c36040b41a40b152f8f3e\r\nCRC-32 \td4bb05c0 \r\nSource: https://doomwiki.org/wiki/TNT.WAD\r\n\r\nNotes for plutonia.wad\r\n\r\nA slightly different, and rarer, version is found on some, but not all, id Anthology discs as well as the Macintosh version of Final Doom. This alternate version of the IWAD is also the one available for purchase from GOG.com. This version adds the missing deathmatch starts to MAP12 and MAP23. Unfortunately, there is no revision change between both versions so it is also called v1.9. It is 18,240,172 bytes in size, contains 2,988 entries, it is dated 1996-11-21 and has the following hashes:\r\nHash type \tHash code\r\nMD5 \t3493be7e1e2588bc9c8b31eab2587a04\r\nSHA-1 \tf131cbe1946d7fddb3caec4aa258c83399c21e60\r\nCRC-32 \t15cd1448\r\nSource: https://doomwiki.org/wiki/PLUTONIA.WAD",
+  "credits": "",
+  "created_at": "2022-10-19T12:06:41.827638Z",
+  "updated_at": "2022-10-19T12:06:41.827662Z",
+  "draft": false,
+  "published": false,
+  "published_by": null,
+  "rating": "",
+  "is_playable": null,
+  "steamid": 2290,
+  "gogid": 1435848742,
+  "gogslug": "final_doom_game",
+  "humbleid": "",
+  "humblestoreid": "",
+  "humblestoreid_real": "",
+  "script": {
+    "files": [
+      {
+        "tntwad192": "N/A: Please provide v1.9-2 tnt.wad (sha256: be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228)"
+      },
+      {
+        "plutoniawad192": "N/A: Please provide v1.9-2 plutonia.wad (sha256: f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80)"
+      }
+    ],
+    "game": {
+      "args": "tnt",
+      "exe": "$GAMEDIR/final-doom.sh",
+      "launch_configs": [
+        {
+          "exe": "tnt",
+          "name": "TNT: Evilution"
+        },
+        {
+          "exe": "plutonia",
+          "name": "The Plutonia Experiment"
+        }
+      ]
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/tntwad192",
+          "src": "tntwad192"
+        }
+      },
+      {
+        "execute": {
+          "args": "tntwad192 $tntwad192_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/plutoniawad192",
+          "src": "plutoniawad192"
+        }
+      },
+      {
+        "execute": {
+          "args": "plutoniawad192 $plutoniawad192_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/wads",
+          "file": "mkdir"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$GAMEDIR/wads",
+          "src": "$CACHE/tntwad192"
+        }
+      },
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/savegames/tnt.wad",
+          "file": "mkdir"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$GAMEDIR/wads",
+          "src": "$CACHE/plutoniawad192"
+        }
+      },
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/savegames/plutonia.wad",
+          "file": "mkdir"
+        }
+      },
+      {
+        "write_file": {
+          "content": "#!/bin/bash\ngame=$1; set -- \"${@:2}\";\ncrispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/$game.wad -savedir savegames/$game.wad $@\n",
+          "file": "$GAMEDIR/final-doom.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $GAMEDIR/final-doom.sh",
+          "file": "chmod"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum, crispy-doom",
+    "variables": {
+      "plutoniawad192_sha256": "f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80",
+      "tntwad192_sha256": "be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228"
+    }
+  },
+  "content": "files:\n- tntwad192: 'N/A: Please provide v1.9-2 tnt.wad (sha256: be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228)'\n- plutoniawad192: 'N/A: Please provide v1.9-2 plutonia.wad (sha256: f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80)'\ngame:\n  args: tnt\n  exe: $GAMEDIR/final-doom.sh\n  launch_configs:\n  - exe: tnt\n    name: 'TNT: Evilution'\n  - exe: plutonia\n    name: The Plutonia Experiment\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- merge:\n    dst: $CACHE/tntwad192\n    src: tntwad192\n- execute:\n    args: tntwad192 $tntwad192_sha256\n    file: $CACHE/checkhash.sh\n- merge:\n    dst: $CACHE/plutoniawad192\n    src: plutoniawad192\n- execute:\n    args: plutoniawad192 $plutoniawad192_sha256\n    file: $CACHE/checkhash.sh\n- execute:\n    args: -p $GAMEDIR/wads\n    file: mkdir\n- merge:\n    dst: $GAMEDIR/wads\n    src: $CACHE/tntwad192\n- execute:\n    args: -p $GAMEDIR/savegames/tnt.wad\n    file: mkdir\n- merge:\n    dst: $GAMEDIR/wads\n    src: $CACHE/plutoniawad192\n- execute:\n    args: -p $GAMEDIR/savegames/plutonia.wad\n    file: mkdir\n- write_file:\n    content: '#!/bin/bash\n\n      game=$1; set -- \"${@:2}\";\n\n      crispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/$game.wad\n      -savedir savegames/$game.wad $@\n\n      '\n    file: $GAMEDIR/final-doom.sh\n- execute:\n    args: +x $GAMEDIR/final-doom.sh\n    file: chmod\nrequire-binaries: sha256sum, crispy-doom\nvariables:\n  plutoniawad192_sha256: f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80\n  tntwad192_sha256: be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228\n",
+  "discord_id": ""
+}

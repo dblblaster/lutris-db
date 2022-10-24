@@ -1,5 +1,6 @@
 {
-  "id": 93220,
+  "id": 35794,
+  "game_id": 1817,
   "game_slug": "the-curse-of-monkey-island",
   "name": "The Curse of Monkey Island",
   "year": 1997,
@@ -7,47 +8,55 @@
   "runner": "linux",
   "slug": "the-curse-of-monkey-island-2-cd",
   "version": "2 CD",
-  "description": "Made to run using system's scummvm binary. Persistent scummvm config stored in game directory.",
+  "description": "Creates launcher script that uses system's scummvm binary and stores persistent config in game directory.",
   "notes": "Requires scummvm (https://www.scummvm.org/) package for your Linux distribution to be installed.",
-  "created_at": "2022-10-18T13:17:40.046597Z",
+  "credits": "",
+  "created_at": "2022-10-19T10:31:21.274969Z",
+  "updated_at": "2022-10-19T10:31:21.274992Z",
   "draft": false,
   "published": false,
+  "published_by": null,
   "rating": "",
+  "is_playable": null,
   "steamid": 730820,
   "gogid": 1528148981,
   "gogslug": "the_curse_of_monkey_island",
+  "humbleid": "",
   "humblestoreid": "",
+  "humblestoreid_real": "",
   "script": {
     "game": {
-      "args": "--fullscreen $scummgame",
-      "exe": "$GAMEDIR/$scummgame.sh"
+      "args": "--fullscreen $scummlabel",
+      "exe": "$GAMEDIR/$scummlabel.sh"
     },
     "installer": [
       {
         "execute": {
-          "command": "mkdir -p $GAMEDIR/gamefiles"
+          "args": "-p $GAMEDIR/gamefiles",
+          "file": "mkdir"
         }
       },
       {
         "execute": {
-          "command": "mkdir -p $GAMEDIR/savegames"
+          "args": "-p $GAMEDIR/savegames",
+          "file": "mkdir"
         }
       },
       {
         "write_file": {
-          "content": "#!/bin/bash\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummgame\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n",
-          "file": "$GAMEDIR/$scummgame.sh"
+          "content": "#!/bin/bash\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\nscummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n",
+          "file": "$GAMEDIR/$scummlabel.sh"
         }
       },
       {
         "execute": {
-          "args": "+x $GAMEDIR/$scummgame.sh",
+          "args": "+x $GAMEDIR/$scummlabel.sh",
           "file": "chmod"
         }
       },
       {
         "execute": {
-          "command": "mkdir -p $GAMEDIR/gamefiles/resource"
+          "command": "mkdir -p \"$GAMEDIR/gamefiles/resource\""
         }
       },
       {
@@ -57,7 +66,7 @@
       },
       {
         "execute": {
-          "command": "cp -rn $DISC/../MONKEY3_1/{resource,comi.*} $GAMEDIR/gamefiles/"
+          "command": "cp -rn \"$DISC/../MONKEY3_1/\"{resource,comi.*} \"$GAMEDIR/gamefiles/\""
         }
       },
       {
@@ -67,19 +76,16 @@
       },
       {
         "execute": {
-          "command": "cp -rn $DISC/../MONKEY3_2/{resource,comi.*} $GAMEDIR/gamefiles/"
+          "command": "cp -rn \"$DISC/../MONKEY3_2/\"{resource,comi.*} \"$GAMEDIR/gamefiles/\""
         }
       }
     ],
     "require-binaries": "scummvm",
     "variables": {
-      "scummgame": "comi"
+      "scummid": "scumm:comi",
+      "scummlabel": "comi"
     }
   },
-  "content": "game:\n  args: --fullscreen $scummgame\n  exe: $GAMEDIR/$scummgame.sh\ninstaller:\n- execute:\n    command: mkdir -p $GAMEDIR/gamefiles\n- execute:\n    command: mkdir -p $GAMEDIR/savegames\n- write_file:\n    content: '#!/bin/bash\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummgame\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n\n      '\n    file: $GAMEDIR/$scummgame.sh\n- execute:\n    args: +x $GAMEDIR/$scummgame.sh\n    file: chmod\n- execute:\n    command: mkdir -p $GAMEDIR/gamefiles/resource\n- insert-disc:\n    requires: ../MONKEY3_1/comi.la1\n- execute:\n    command: cp -rn $DISC/../MONKEY3_1/{resource,comi.*} $GAMEDIR/gamefiles/\n- insert-disc:\n    requires: ../MONKEY3_2/comi.la2\n- execute:\n    command: cp -rn $DISC/../MONKEY3_2/{resource,comi.*} $GAMEDIR/gamefiles/\nrequire-binaries: scummvm\nvariables:\n  scummgame: comi\n",
-  "reason": "",
-  "review": "",
-  "comment": "[submission] the-curse-of-monkey-island-2-cd by dblblaster on 2022-10-18 13:17:40.046683+00:00",
-  "installer_id": 35783,
-  "revision_id": 93094
+  "content": "game:\n  args: --fullscreen $scummlabel\n  exe: $GAMEDIR/$scummlabel.sh\ninstaller:\n- execute:\n    args: -p $GAMEDIR/gamefiles\n    file: mkdir\n- execute:\n    args: -p $GAMEDIR/savegames\n    file: mkdir\n- write_file:\n    content: '#!/bin/bash\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles --add --game=$scummid\n\n      scummvm --config=scummvm.ini --savepath=savegames --path=gamefiles $@\n\n      '\n    file: $GAMEDIR/$scummlabel.sh\n- execute:\n    args: +x $GAMEDIR/$scummlabel.sh\n    file: chmod\n- execute:\n    command: mkdir -p \"$GAMEDIR/gamefiles/resource\"\n- insert-disc:\n    requires: ../MONKEY3_1/comi.la1\n- execute:\n    command: cp -rn \"$DISC/../MONKEY3_1/\"{resource,comi.*} \"$GAMEDIR/gamefiles/\"\n- insert-disc:\n    requires: ../MONKEY3_2/comi.la2\n- execute:\n    command: cp -rn \"$DISC/../MONKEY3_2/\"{resource,comi.*} \"$GAMEDIR/gamefiles/\"\nrequire-binaries: scummvm\nvariables:\n  scummid: scumm:comi\n  scummlabel: comi\n",
+  "discord_id": ""
 }

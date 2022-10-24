@@ -1,0 +1,76 @@
+{
+  "id": 35799,
+  "game_id": 205359,
+  "game_slug": "doom-ii-no-rest-for-the-living",
+  "name": "Doom II: No Rest for the Living",
+  "year": 2010,
+  "user": "dblblaster",
+  "runner": "linux",
+  "slug": "doom-ii-no-rest-for-the-livin-nervewad",
+  "version": "nerve.wad",
+  "description": "Requires Doom II: Hell on Earth installation. Uses doom2 launcher script that uses system's crispy-doom binary and stores persistent config in game directory.",
+  "notes": "Requires https://lutris.net/games/doom-ii-hell-on-earth-v19-doom2wad\r\n\r\nNERVE.WAD is the PWAD containing No Rest for the Living and bundled with Doom and Doom II in Doom 3: BFG Edition. This file was used first in Doom II on XBLA, but is named Nerve_demo.wad in that version. The XBLA, Xbox 360 BFG Edition and PlayStation Network versions are identical to the version bundled in Doom 3: BFG Edition.\r\n\r\nIt is 3,819,855 bytes in size, contains 108 entries, and has the following hashes:\r\nHash type \tHash code\r\nMD5 \t967d5ae23daf45196212ae1b605da3b0\r\nSHA-1 \t3451288383fb16e196f273d9f85d58c1fda97bf4\r\nCRC-32 \tad7f9292",
+  "credits": "",
+  "created_at": "2022-10-19T12:46:08.469075Z",
+  "updated_at": "2022-10-19T12:46:08.469112Z",
+  "draft": false,
+  "published": false,
+  "published_by": null,
+  "rating": "",
+  "is_playable": null,
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humbleid": "",
+  "humblestoreid": "",
+  "humblestoreid_real": "",
+  "script": {
+    "files": [
+      {
+        "nervewad": "N/A: Please provide nerve.wad (sha256: 2d234de8700ee403375fda278e50ea17739b36703b3316e0429b05aca4458fa9)"
+      }
+    ],
+    "game": {
+      "args": "-file wads/nerve.wad",
+      "exe": "$GAMEDIR/doom2.sh"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$CACHE/nervewad",
+          "src": "nervewad"
+        }
+      },
+      {
+        "execute": {
+          "args": "nervewad $nervewad_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "merge": {
+          "dst": "$GAMEDIR/wads",
+          "src": "$CACHE/nervewad"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum, crispy-doom",
+    "variables": {
+      "nervewad_sha256": "2d234de8700ee403375fda278e50ea17739b36703b3316e0429b05aca4458fa9"
+    }
+  },
+  "content": "files:\n- nervewad: 'N/A: Please provide nerve.wad (sha256: 2d234de8700ee403375fda278e50ea17739b36703b3316e0429b05aca4458fa9)'\ngame:\n  args: -file wads/nerve.wad\n  exe: $GAMEDIR/doom2.sh\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- merge:\n    dst: $CACHE/nervewad\n    src: nervewad\n- execute:\n    args: nervewad $nervewad_sha256\n    file: $CACHE/checkhash.sh\n- merge:\n    dst: $GAMEDIR/wads\n    src: $CACHE/nervewad\nrequire-binaries: sha256sum, crispy-doom\nvariables:\n  nervewad_sha256: 2d234de8700ee403375fda278e50ea17739b36703b3316e0429b05aca4458fa9\n",
+  "discord_id": ""
+}

@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/another-world/revisions/93114
+https://lutris.net/api/installers/another-world-cd-15th-anniversary-
 
 ### game_slug
 
@@ -22,6 +22,18 @@ CD 15th Anniversary Edition
 
 ```
 
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content

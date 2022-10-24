@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/half-life-blue-shift/revisions/93110
+https://lutris.net/api/installers/half-life-blue-shift-cd-v1000
 
 ### game_slug
 
@@ -22,7 +22,7 @@ This installs and updates the game to the last World Opponent Network (WON) non-
 
 ```
 Requires Half-Life v1.1.1.0 and optionally Half-Life: Opposing Force v1.1.0.9 to be installed, and assumes community resolution/FoV/mp3 patch v1.1.2 has been applied.
-Use Half-Life: Opposing Force CD v1.0.0.x version (lutris:half-life-opposing-force-cd-v100x) for best results.
+For best results use Half-Life: Opposing Force - CD v1.0.0.x version - lutris:half-life-opposing-force-cd-v100x (https://lutris.net/api/installers/half-life-opposing-force-cd-v100x).
 
 Run the game with Default OpenGL driver (3dfx mini doesn't work good with wine and the installer script will disable it) and select resolution to match your Desktop, e.g. run it with game args:
 -game bshift_unlocked -full -gl -gldrv Default -width 1920 -height 1080 -console
@@ -30,6 +30,18 @@ Run the game with Default OpenGL driver (3dfx mini doesn't work good with wine a
 If you want to use Direct3D then you must run it in window mode, e.g.:
 -game bshift_unlocked -window -d3d -width 1920 -height 1080 -console
 because it is unstable in fullscreen mode.
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
@@ -73,17 +85,11 @@ installer:
 - execute:
     args: +x $CACHE/checkhash.sh
     file: chmod
-- merge:
-    dst: $CACHE/patch1001
-    src: patch1001
 - execute:
-    args: '"$patch1001" $patch1001_sha256'
+    args: patch1001 $patch1001_sha256
     file: $CACHE/checkhash.sh
-- merge:
-    dst: $CACHE/bsulpatch11
-    src: bsulpatch11
 - execute:
-    args: '"bsulpatch11" $bsulpatch11_sha256'
+    args: bsulpatch11 $bsulpatch11_sha256
     file: $CACHE/checkhash.sh
 - task:
     arch: win32
@@ -108,9 +114,9 @@ installer:
 - execute:
     args: $CACHE/ripaudio.sh
     file: bash
-- move:
-    dst: $GAMEDIR/$gamepath/gldrv/drvmap.txt.disabled
-    src: $GAMEDIR/$gamepath/gldrv/drvmap.txt
+- execute:
+    args: -f "$GAMEDIR/drive_c/users/user/Desktop/Blue Shift.LNK"
+    file: rm
 - write_file:
     content: GL_texturemode GL_Nearest
     file: $GAMEDIR/$gamepath/bshift_unlocked/autoexec.cfg

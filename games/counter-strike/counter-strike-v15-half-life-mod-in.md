@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/counter-strike/revisions/93111
+https://lutris.net/api/installers/counter-strike-v15-half-life-mod-in
 
 ### game_slug
 
@@ -12,16 +12,17 @@ wine
 
 ### version
 
-Mod v1.5 for Half-Life v1.1.1.0
+v1.5 Half-Life mod installer
 
 ### description
 
-This installs the last World Opponent Network (WON) non-Steam mod version of Counter-Strike.
+This installs the last World Opponent Network (WON) non-Steam mod version of Counter-Strike (v1.5).
 
 ### notes
 
 ```
-Requires Half-Life v1.1.1.0 and assumes community resolution/FoV/mp3 patch v1.1.2 has been applied.
+Requires Half-Life v1.1.1.0 and optionally Half-Life: Opposing Force v1.1.0.9 to be installed, and assumes community resolution/FoV/mp3 patch v1.1.2 has been applied.
+For best results use Half-Life: Opposing Force - CD v1.0.0.x version - lutris:half-life-opposing-force-cd-v100x (https://lutris.net/api/installers/half-life-opposing-force-cd-v100x).
 
 Run the game with Default OpenGL driver and select resolution to match your Desktop, e.g. run it with game args:
 -game cstrike -full -gl -gldrv Default -width 1920 -height 1080 -console
@@ -29,6 +30,18 @@ Run the game with Default OpenGL driver and select resolution to match your Desk
 If you want to use Direct3D then you must run it in window mode, e.g.:
 -game cstrike -window -d3d -width 1920 -height 1080 -console
 because it is unstable in fullscreen mode.
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
@@ -54,11 +67,8 @@ installer:
 - execute:
     args: +x $CACHE/checkhash.sh
     file: chmod
-- merge:
-    dst: $CACHE/csv15
-    src: csv15
 - execute:
-    args: '"csv15" $csv15_sha256'
+    args: csv15 $csv15_sha256
     file: $CACHE/checkhash.sh
 - task:
     arch: win32

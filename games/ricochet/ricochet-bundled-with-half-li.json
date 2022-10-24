@@ -1,22 +1,29 @@
 {
-  "id": 93238,
+  "id": 35906,
+  "game_id": 102,
   "game_slug": "ricochet",
   "name": "Ricochet",
   "year": 2000,
   "user": "dblblaster",
   "runner": "wine",
-  "slug": "ricochet-mod-for-half-life-v1",
-  "version": "Mod for Half-Life v1.1.1.0",
+  "slug": "ricochet-bundled-with-half-li",
+  "version": "Bundled with Half-Life v1.1.1.0",
   "description": "This is a launcher for the mod that's included with Half-Life. This is for the last World Opponent Network (WON) non-Steam version of Half-Life (v1.1.1.0).",
   "notes": "Requires Half-Life v1.1.1.0 and assumes community resolution/FoV/mp3 patch v1.1.2 has been applied.\r\n\r\nRun the game with Default OpenGL driver and select resolution to match your Desktop, e.g. run it with game args:\r\n-game ricochet -full -gl -gldrv Default -width 1920 -height 1080 -console\r\n\r\nIf you want to use Direct3D then you must run it in window mode, e.g.:\r\n-game ricochet -window -d3d -width 1920 -height 1080 -console\r\nbecause it is unstable in fullscreen mode.",
-  "created_at": "2022-10-18T17:46:13.086822Z",
-  "draft": true,
+  "credits": "",
+  "created_at": "2022-10-24T12:06:11.490450Z",
+  "updated_at": "2022-10-24T12:06:11.490475Z",
+  "draft": false,
   "published": false,
+  "published_by": null,
   "rating": "",
+  "is_playable": null,
   "steamid": 60,
   "gogid": null,
   "gogslug": "",
+  "humbleid": "",
   "humblestoreid": "",
+  "humblestoreid_real": "",
   "script": {
     "game": {
       "arch": "win32",
@@ -42,9 +49,5 @@
     }
   },
   "content": "game:\n  arch: win32\n  args: -game ricochet -full -gl -gldrv Default -width 1920 -height 1080 -console\n  exe: $GAMEDIR/$gamepath/hl.exe\n  prefix: $GAMEDIR\ninstaller:\n- write_file:\n    content: GL_texturemode GL_Nearest\n    file: $GAMEDIR/$gamepath/ricochet/autoexec.cfg\nrequires: half-life\nvariables:\n  gamepath: drive_c/SIERRA/Half-Life\nwine:\n  Desktop: true\n  dgvoodoo2: true\n",
-  "reason": "",
-  "review": "",
-  "comment": "[draft] ricochet-mod-for-half-life-v1 by dblblaster on 2022-10-18 17:46:13.086873+00:00",
-  "installer_id": 35746,
-  "revision_id": 93112
+  "discord_id": ""
 }

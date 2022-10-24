@@ -1,5 +1,6 @@
 {
-  "id": 93233,
+  "id": 35870,
+  "game_id": 103,
   "game_slug": "half-life",
   "name": "Half-Life",
   "year": 1998,
@@ -7,16 +8,22 @@
   "runner": "wine",
   "slug": "half-life-cd-v100x",
   "version": "CD v1.0.0.x",
-  "description": "This is base for other installers. Installs the CD version of the game and rips audio tracks to .mp3 files in game folder.",
-  "notes": "Do not run the game yet and do not patch manually.\r\n\r\nProceed to use one of the 2 other installers:\r\n- Half-Life 1.1.0.0+fixes patcher. Using this will prevent later installation of Opposing Force\r\n- Opposing Force. It will install OF and patch HL to 1.1.1.0 and OF to 1.1.0.9 + fixes",
-  "created_at": "2022-10-18T17:44:49.104511Z",
-  "draft": true,
+  "description": "This is a base for other installers. Installs the CD version of the game and rips audio tracks to .mp3 files into game folder.",
+  "notes": "Do not run the game yet and do not patch manually.\r\n\r\nWhen installation completes, proceed to use one of the 2 other installers:\r\n- Half-Life - Patch v1.1.1.0 version - lutris:half-life-patch-v1110 (https://lutris.net/api/installers/half-life-patch-v1110).\r\n- Half-Life: Opposing Force - CD v1.0.0.x version - lutris:half-life-opposing-force-cd-v100x (https://lutris.net/api/installers/half-life-opposing-force-cd-v100x).",
+  "credits": "",
+  "created_at": "2022-10-23T10:18:26.040675Z",
+  "updated_at": "2022-10-23T10:18:26.040699Z",
+  "draft": false,
   "published": false,
+  "published_by": null,
   "rating": "",
+  "is_playable": null,
   "steamid": 70,
   "gogid": null,
   "gogslug": "",
+  "humbleid": "",
   "humblestoreid": "",
+  "humblestoreid_real": "",
   "script": {
     "game": {
       "arch": "win32",
@@ -82,9 +89,5 @@
     }
   },
   "content": "game:\n  arch: win32\n  args: -full -gl -gldrv Default -width 1920 -height 1080 -console\n  exe: $GAMEDIR/$gamepath/hl.exe\n  prefix: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../HALF_LIFE/Setup.exe\n- write_file:\n    content: '#!/bin/bash\n\n      cddevice=$(mount | grep -m 1 HALF_LIFE | grep -oE \"/dev/\\w+\"); mkdir -p \"$GAMEDIR/$gamepath/valve/media\";\n      tracknames=(\"data\" \"Half-Life01.mp3\" \"Prospero01.mp3\" \"Half-Life12.mp3\" \"Half-Life07.mp3\"\n      \"Half-Life10.mp3\" \"Suspense01.mp3\" \"Suspense03.mp3\" \"Half-Life09.mp3\" \"Half-Life02.mp3\"\n      \"Half-Life13.mp3\" \"Half-Life04.mp3\" \"Half-Life15.mp3\" \"Half-Life14.mp3\" \"Half-Life16.mp3\"\n      \"Suspense02.mp3\" \"Half-Life03.mp3\" \"Half-Life08.mp3\" \"Prospero02.mp3\" \"Half-Life05.mp3\"\n      \"Prospero04.mp3\" \"Half-Life11.mp3\" \"Half-Life06.mp3\" \"Prospero03.mp3\" \"Half-Life17.mp3\"\n      \"Prospero05.mp3\" \"Suspense05.mp3\" \"Suspense07.mp3\"); for i in {2..28}; do cdda2wav\n      -D \"$cddevice\" -t $i+$i - | lame -b 320 --id3v1-only - \"$GAMEDIR/$gamepath/valve/media/${tracknames[$((i-1))]}\";\n      done\n\n      '\n    file: $CACHE/ripaudio.sh\n- task:\n    arch: win32\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- task:\n    arch: win32\n    executable: $DISC/../HALF_LIFE/Setup.exe\n    name: wineexec\n    prefix: $GAMEDIR\n- execute:\n    args: $CACHE/ripaudio.sh\n    file: bash\n- move:\n    dst: $GAMEDIR/$gamepath/gldrv/drvmap.txt.disabled\n    src: $GAMEDIR/$gamepath/gldrv/drvmap.txt\n- write_file:\n    content: GL_texturemode GL_Nearest\n    file: $GAMEDIR/$gamepath/valve/autoexec.cfg\nrequire-binaries: cdda2wav, lame\nvariables:\n  gamepath: drive_c/SIERRA/Half-Life\nwine:\n  Desktop: true\n  dgvoodoo2: true\n",
-  "reason": "",
-  "review": "",
-  "comment": "[draft] half-life-cd-v100x by dblblaster on 2022-10-18 17:44:49.104572+00:00",
-  "installer_id": 35724,
-  "revision_id": 93107
+  "discord_id": "363430548028522496"
 }

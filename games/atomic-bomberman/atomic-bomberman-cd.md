@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/atomic-bomberman/revisions/93039
+https://lutris.net/api/installers/atomic-bomberman-cd
 
 ### game_slug
 
@@ -24,6 +24,18 @@ CD
 Do not alt-tab while playing, it breaks graphics.
 ```
 
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
+```
+
 ### content
 
 ```
@@ -41,12 +53,13 @@ installer:
     name: create_prefix
     prefix: $GAMEDIR
 - execute:
-    command: mkdir -p $GAMEDIR/$gamepath
+    args: -p $GAMEDIR/$gamepath
+    file: mkdir
 - execute:
-    command: cp -r $DISC/../BOMBRMAN/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg}
-      $GAMEDIR/$gamepath/
+    command: cp -r "$DISC/../BOMBRMAN"/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg}
+      "$GAMEDIR/$gamepath/"
 - execute:
-    command: echo -n -e "\x81\xfb\xbf\x33" > $GAMEDIR/$gamepath/levels.dat
+    command: echo -n -e "\x81\xfb\xbf\x33" > "$GAMEDIR/$gamepath/levels.dat"
 - write_file:
     content: '; created by d:\makecfg.exe
 

@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/ricochet/revisions/93112
+https://lutris.net/api/installers/ricochet-bundled-with-half-li
 
 ### game_slug
 
@@ -12,7 +12,7 @@ wine
 
 ### version
 
-Mod for Half-Life v1.1.1.0
+Bundled with Half-Life v1.1.1.0
 
 ### description
 
@@ -29,6 +29,18 @@ Run the game with Default OpenGL driver and select resolution to match your Desk
 If you want to use Direct3D then you must run it in window mode, e.g.:
 -game ricochet -window -d3d -width 1920 -height 1080 -console
 because it is unstable in fullscreen mode.
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content

@@ -1,5 +1,6 @@
 {
-  "id": 93165,
+  "id": 35852,
+  "game_id": 113749,
   "game_slug": "atomic-bomberman",
   "name": "Atomic Bomberman",
   "year": 1997,
@@ -9,14 +10,20 @@
   "version": "CD",
   "description": "",
   "notes": "Do not alt-tab while playing, it breaks graphics.",
-  "created_at": "2022-10-16T09:48:44.832266Z",
+  "credits": "",
+  "created_at": "2022-10-22T14:27:22.815531Z",
+  "updated_at": "2022-10-22T14:27:22.815552Z",
   "draft": false,
   "published": false,
+  "published_by": null,
   "rating": "",
+  "is_playable": null,
   "steamid": null,
   "gogid": null,
   "gogslug": "",
+  "humbleid": "",
   "humblestoreid": "",
+  "humblestoreid_real": "",
   "script": {
     "game": {
       "arch": "win32",
@@ -40,17 +47,18 @@
       },
       {
         "execute": {
-          "command": "mkdir -p $GAMEDIR/$gamepath"
+          "args": "-p $GAMEDIR/$gamepath",
+          "file": "mkdir"
         }
       },
       {
         "execute": {
-          "command": "cp -r $DISC/../BOMBRMAN/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg} $GAMEDIR/$gamepath/"
+          "command": "cp -r \"$DISC/../BOMBRMAN\"/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg} \"$GAMEDIR/$gamepath/\""
         }
       },
       {
         "execute": {
-          "command": "echo -n -e \"\\x81\\xfb\\xbf\\x33\" > $GAMEDIR/$gamepath/levels.dat"
+          "command": "echo -n -e \"\\x81\\xfb\\xbf\\x33\" > \"$GAMEDIR/$gamepath/levels.dat\""
         }
       },
       {
@@ -64,10 +72,6 @@
       "gamepath": "drive_c/INTRPLAY/BOMBRMAN"
     }
   },
-  "content": "game:\n  arch: win32\n  exe: $GAMEDIR/$gamepath/bm95.exe\n  prefix: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../BOMBRMAN/sfadmo95.exe\n- task:\n    arch: win32\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- execute:\n    command: mkdir -p $GAMEDIR/$gamepath\n- execute:\n    command: cp -r $DISC/../BOMBRMAN/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg}\n      $GAMEDIR/$gamepath/\n- execute:\n    command: echo -n -e \"\\x81\\xfb\\xbf\\x33\" > $GAMEDIR/$gamepath/levels.dat\n- write_file:\n    content: '; created by d:\\makecfg.exe\n\n      hdhome=C:\\INTRPLAY\\BOMBRMAN\n\n      cdhome=d:\\\n\n      ; debug=3debug.log\n\n      soundonoff=1\n\n      netonoff=1\n\n      '\n    file: $GAMEDIR/$gamepath/cfg.ini\nvariables:\n  gamepath: drive_c/INTRPLAY/BOMBRMAN\n",
-  "reason": "",
-  "review": "",
-  "comment": "[submission] atomic-bomberman-cd by dblblaster on 2022-10-16 09:48:44.832328+00:00",
-  "installer_id": 35764,
-  "revision_id": 93039
+  "content": "game:\n  arch: win32\n  exe: $GAMEDIR/$gamepath/bm95.exe\n  prefix: $GAMEDIR\ninstaller:\n- insert-disc:\n    requires: ../BOMBRMAN/sfadmo95.exe\n- task:\n    arch: win32\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- execute:\n    args: -p $GAMEDIR/$gamepath\n    file: mkdir\n- execute:\n    command: cp -r \"$DISC/../BOMBRMAN\"/{*.rmp,bm95.*,*.pal,*.bm,*.fon,*.txt,makecfg.exe,data,tools,winereg}\n      \"$GAMEDIR/$gamepath/\"\n- execute:\n    command: echo -n -e \"\\x81\\xfb\\xbf\\x33\" > \"$GAMEDIR/$gamepath/levels.dat\"\n- write_file:\n    content: '; created by d:\\makecfg.exe\n\n      hdhome=C:\\INTRPLAY\\BOMBRMAN\n\n      cdhome=d:\\\n\n      ; debug=3debug.log\n\n      soundonoff=1\n\n      netonoff=1\n\n      '\n    file: $GAMEDIR/$gamepath/cfg.ini\nvariables:\n  gamepath: drive_c/INTRPLAY/BOMBRMAN\n",
+  "discord_id": ""
 }

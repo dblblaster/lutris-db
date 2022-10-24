@@ -1,10 +1,10 @@
 ### url
 
-https://lutris.net/api/installers/the-curse-of-monkey-island-2-cd
+https://lutris.net/api/installers/discworld-ii-missing-presumed-2-cd-gb
 
 ### game_slug
 
-the-curse-of-monkey-island
+discworld-ii-missing-presumed
 
 ### runner
 
@@ -12,7 +12,7 @@ linux
 
 ### version
 
-2 CD
+2 CD (GB)
 
 ### description
 
@@ -61,20 +61,26 @@ installer:
 - execute:
     args: +x $GAMEDIR/$scummlabel.sh
     file: chmod
-- execute:
-    command: mkdir -p "$GAMEDIR/gamefiles/resource"
 - insert-disc:
-    requires: ../MONKEY3_1/comi.la1
+    requires: ../DW2CD1_ENG/dw2win.exe
 - execute:
-    command: cp -rn "$DISC/../MONKEY3_1/"{resource,comi.*} "$GAMEDIR/gamefiles/"
+    command: cp -n "$DISC/../DW2CD1_ENG/dw2/"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk}
+      "$GAMEDIR/gamefiles/"
+- execute:
+    command: for i in "$DISC/../DW2CD1_ENG/dw2/"english.*; do cp -n "$i" "$GAMEDIR/gamefiles/english1.$(basename
+      "$i" | cut -d. -f2)"; done
 - insert-disc:
-    requires: ../MONKEY3_2/comi.la2
+    requires: ../DW2_CD1_ENG/dw2win.exe
 - execute:
-    command: cp -rn "$DISC/../MONKEY3_2/"{resource,comi.*} "$GAMEDIR/gamefiles/"
+    command: cp -n "$DISC/../DW2_CD1_ENG/dw2/"{*.bmv,*.cdp,*.mus,*.scn,gdata,hopper,index,../sample.bnk}
+      "$GAMEDIR/gamefiles/"
+- execute:
+    command: for i in "$DISC/../DW2_CD1_ENG/dw2/"english.*; do cp -n "$i" "$GAMEDIR/gamefiles/english2.$(basename
+      "$i" | cut -d. -f2)"; done
 require-binaries: scummvm
 variables:
-  scummid: scumm:comi
-  scummlabel: comi
+  scummid: tinsel:dw2
+  scummlabel: dw2-gb
 
 ```
 

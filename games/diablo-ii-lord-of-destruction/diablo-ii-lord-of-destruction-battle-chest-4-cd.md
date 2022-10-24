@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/diablo-ii-lord-of-destruction/revisions/93031
+https://lutris.net/api/installers/diablo-ii-lord-of-destruction-battle-chest-4-cd
 
 ### game_slug
 
@@ -21,7 +21,7 @@ This installs both Diablo II and Diablo II: Lord of Destruction (v1.12) from the
 ### notes
 
 ```
-This edition requires 26-character CD-keys, one for Diablo II and one for Diablo II: Lord of Destruction.
+This edition requires 26-character CD-keys, one for original Diablo II and one for the expansion pack.
 
 1. Rip all 4 CDs
 2. Mount all 4 CDs
@@ -30,6 +30,18 @@ This edition requires 26-character CD-keys, one for Diablo II and one for Diablo
 5. When Diablo II: Lord of Destruction completes, exit the installer to continue.
 6. Select patch version from the drop-down menu.
 7. If patch was applied it will auto-start the game. Exit the game to complete the installation.
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
@@ -43,36 +55,42 @@ game:
   exe: $GAMEDIR/$gamepath/Diablo II.exe
   prefix: $GAMEDIR
 installer:
-- merge:
-    dst: $CACHE/patch113c
-    src: patch113c
+- write_file:
+    content: '#!/bin/bash
+
+      file="$1"; hash="$2"; echo "[INFO] Verifying $(basename "$file") sha256 checksum...";
+      if [ $(sha256sum "$file" | cut -c 1-64) = "$hash" ]; then echo "[INFO] ...checksum
+      OK!"; else echo "[ERROR] ...checksum FAILED!"; exit 1; fi
+
+      '
+    file: $CACHE/checkhash.sh
 - execute:
-    command: echo "[INFO] Verifying LODPatch_113c.exe (patch v1.13c) sha256 checksum...";
-      afunc() { [ $(sha256sum "$patch113c" | cut -c 1-64) = $patch113c_sha256 ]; };
-      afunc;
+    args: +x $CACHE/checkhash.sh
+    file: chmod
 - execute:
-    command: echo "[INFO] LODPatch_113c.exe checksum OK"
-- merge:
-    dst: $CACHE/patch114d
-    src: patch114d
+    args: patch113c $patch113c_sha256
+    file: $CACHE/checkhash.sh
 - execute:
-    command: echo "[INFO] Verifying LODPatch_114d.exe (patch v1.14d) sha256 checksum...";
-      afunc() { [ $(sha256sum "$patch114d" | cut -c 1-64) = $patch114d_sha256 ]; };
-      afunc;
+    args: -n patch113c $CACHE/patch113c/LODPatch_113c.exe
+    file: cp
 - execute:
-    command: echo "[INFO] LODPatch_114d.exe checksum OK"
-- task:
-    arch: win64
-    install_gecko: false
-    install_mono: false
-    name: create_prefix
-    prefix: $GAMEDIR
+    args: patch114d $patch114d_sha256
+    file: $CACHE/checkhash.sh
+- execute:
+    args: -n patch114d $CACHE/patch114d/LODPatch_114d.exe
+    file: cp
 - insert-disc:
     requires: ../Diablo II Disc 1/installer tome.mpq
 - insert-disc:
     requires: ../Diablo II Disc 2/installer tome 2.mpq
 - insert-disc:
     requires: ../Diablo II Disc 3/installer tome 3.mpq
+- task:
+    arch: win64
+    install_gecko: false
+    install_mono: false
+    name: create_prefix
+    prefix: $GAMEDIR
 - task:
     arch: win64
     executable: $DISC/../Diablo II Disc 1/installer.exe

@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/final-doom/revisions/93104
+https://lutris.net/api/installers/final-doom-v19-2-tntwad-plutoni
 
 ### game_slug
 
@@ -12,16 +12,18 @@ linux
 
 ### version
 
-doom.wad v1.9-2
+v1.9-2 tnt.wad & plutonia.wad
 
 ### description
 
-Made to run using system's crispy-doom binary. Provides launcher options for both tnt.wad and plutonia.wad.
+Creates launcher script that uses system's crispy-doom binary and stores persistent config in game directory. Provides launcher options for both tnt.wad and plutonia.wad.
 
 ### notes
 
 ```
 Requires crispy-doom (https://github.com/fabiangreffrath/crispy-doom) package for your Linux distribution to be installed.
+
+Notes for tnt.wad
 
 A slightly different, and rarer, version is found on some, but not all, id Anthology discs as well as the Macintosh version of Final Doom. This alternate version of the IWAD is also the one available for purchase from GOG.com. This version does not have the yellow keycard bug, and has a few changes in MAP10. Unfortunately, there is no revision change between both versions so it is also called v1.9. It is 18,654,796 bytes in size, contains 3,106 entries, it is dated 1996-11-14 and has the following hashes:
 Hash type 	Hash code
@@ -29,6 +31,8 @@ MD5 	1d39e405bf6ee3df69a8d2646c8d5c49
 SHA-1 	4a65c8b960225505187c36040b41a40b152f8f3e
 CRC-32 	d4bb05c0 
 Source: https://doomwiki.org/wiki/TNT.WAD
+
+Notes for plutonia.wad
 
 A slightly different, and rarer, version is found on some, but not all, id Anthology discs as well as the Macintosh version of Final Doom. This alternate version of the IWAD is also the one available for purchase from GOG.com. This version adds the missing deathmatch starts to MAP12 and MAP23. Unfortunately, there is no revision change between both versions so it is also called v1.9. It is 18,240,172 bytes in size, contains 2,988 entries, it is dated 1996-11-21 and has the following hashes:
 Hash type 	Hash code
@@ -38,20 +42,31 @@ CRC-32 	15cd1448
 Source: https://doomwiki.org/wiki/PLUTONIA.WAD
 ```
 
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
+```
+
 ### content
 
 ```
 files:
-- tntwad192: 'N/A: Please provide tnt.wad v1.9-2 (sha256: be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228)'
-- plutoniawad192: 'N/A: Please provide plutonia.wad v1.9-2 (sha256: f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80)'
+- tntwad192: 'N/A: Please provide v1.9-2 tnt.wad (sha256: be3130f780037d0a640fce5639f4e2df88ce2d36128725a675f9aec1b6048228)'
+- plutoniawad192: 'N/A: Please provide v1.9-2 plutonia.wad (sha256: f31395fb5580ef8fee26514b34874f8ab354c78fbbed35c8bfe04ec42ddc0c80)'
 game:
+  args: tnt
   exe: $GAMEDIR/final-doom.sh
   launch_configs:
-  - args: tnt
-    exe: $GAMEDIR/final-doom.sh
+  - exe: tnt
     name: 'TNT: Evilution'
-  - args: plutonia
-    exe: $GAMEDIR/final-doom.sh
+  - exe: plutonia
     name: The Plutonia Experiment
 installer:
 - write_file:
@@ -70,33 +85,36 @@ installer:
     dst: $CACHE/tntwad192
     src: tntwad192
 - execute:
-    args: '"tntwad192" $tntwad192_sha256'
+    args: tntwad192 $tntwad192_sha256
     file: $CACHE/checkhash.sh
 - merge:
     dst: $CACHE/plutoniawad192
     src: plutoniawad192
 - execute:
-    args: '"plutoniawad192" $plutoniawad192_sha256'
+    args: plutoniawad192 $plutoniawad192_sha256
     file: $CACHE/checkhash.sh
 - execute:
-    command: mkdir -p $GAMEDIR/wads
+    args: -p $GAMEDIR/wads
+    file: mkdir
 - merge:
     dst: $GAMEDIR/wads
     src: $CACHE/tntwad192
 - execute:
-    command: mkdir -p $GAMEDIR/savegames/tnt.wad
+    args: -p $GAMEDIR/savegames/tnt.wad
+    file: mkdir
 - merge:
     dst: $GAMEDIR/wads
     src: $CACHE/plutoniawad192
 - execute:
-    command: mkdir -p $GAMEDIR/savegames/plutonia.wad
+    args: -p $GAMEDIR/savegames/plutonia.wad
+    file: mkdir
 - write_file:
     content: '#!/bin/bash
 
       game=$1; set -- "${@:2}";
 
-      crispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/$1.wad
-      -savedir savegames/$1.wad $@
+      crispy-doom -config default.cfg -extraconfig crispy-doom.cfg -iwad wads/$game.wad
+      -savedir savegames/$game.wad $@
 
       '
     file: $GAMEDIR/final-doom.sh

@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/half-life/revisions/93107
+https://lutris.net/api/installers/half-life-cd-v100x
 
 ### game_slug
 
@@ -16,16 +16,28 @@ CD v1.0.0.x
 
 ### description
 
-This is base for other installers. Installs the CD version of the game and rips audio tracks to .mp3 files in game folder.
+This is a base for other installers. Installs the CD version of the game and rips audio tracks to .mp3 files into game folder.
 
 ### notes
 
 ```
 Do not run the game yet and do not patch manually.
 
-Proceed to use one of the 2 other installers:
-- Half-Life 1.1.0.0+fixes patcher. Using this will prevent later installation of Opposing Force
-- Opposing Force. It will install OF and patch HL to 1.1.1.0 and OF to 1.1.0.9 + fixes
+When installation completes, proceed to use one of the 2 other installers:
+- Half-Life - Patch v1.1.1.0 version - lutris:half-life-patch-v1110 (https://lutris.net/api/installers/half-life-patch-v1110).
+- Half-Life: Opposing Force - CD v1.0.0.x version - lutris:half-life-opposing-force-cd-v100x (https://lutris.net/api/installers/half-life-opposing-force-cd-v100x).
+```
+
+### credits
+
+```
+
+```
+
+### reason
+
+```
+null
 ```
 
 ### content
