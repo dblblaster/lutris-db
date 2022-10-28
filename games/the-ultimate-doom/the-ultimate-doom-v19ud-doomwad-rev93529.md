@@ -1,6 +1,6 @@
 ### url
 
-https://lutris.net/api/installers/games/the-ultimate-doom/revisions/93161
+https://lutris.net/api/installers/games/the-ultimate-doom/revisions/93529
 
 ### game_slug
 
