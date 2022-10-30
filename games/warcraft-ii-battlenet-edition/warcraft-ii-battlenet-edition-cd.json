@@ -1,0 +1,127 @@
+{
+  "id": 35975,
+  "game_id": 205402,
+  "game_slug": "warcraft-ii-battlenet-edition",
+  "name": "Warcraft II: Battle.net Edition",
+  "year": 1999,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "warcraft-ii-battlenet-edition-cd",
+  "version": "CD",
+  "description": "Installs the game from original CD. Applies the last official patch (v2.02-1). Patches a single byte in storm.dll to allow playing without the CD.",
+  "notes": "1. In original setup launcher, click the \"Install Warcraft II\" button, enter the CD key, and install to default folder\r\n2. When it completes just click \"Exit Installer\" to continue\r\n3. Patch will install next. When you click \"OK\" the patcher window will close but it will start the game. Exit the game (press ESC a few times) to complete lutris setup.\r\n4. Normally launch the game from lutris",
+  "credits": "Runs smooth thanks to https://github.com/FunkyFr3sh/cnc-ddraw",
+  "created_at": "2022-10-29T19:02:44.745517Z",
+  "updated_at": "2022-10-29T19:02:44.745543Z",
+  "draft": false,
+  "published": false,
+  "published_by": null,
+  "rating": "",
+  "is_playable": null,
+  "steamid": null,
+  "gogid": null,
+  "gogslug": "",
+  "humbleid": "",
+  "humblestoreid": "",
+  "humblestoreid_real": "",
+  "script": {
+    "files": [
+      {
+        "patch202": "https://harmony15.altervista.org/War2Patch/War2Patch_202.exe"
+      },
+      {
+        "cncddraw": "https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip"
+      }
+    ],
+    "game": {
+      "arch": "win32",
+      "exe": "$GAMEDIR/$gamepath/Warcraft II BNE.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "execute": {
+          "args": "cncddraw $cncddraw_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "patch202 $patch202_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../WAR2BNECD/setup.exe"
+        }
+      },
+      {
+        "task": {
+          "executable": "$DISC/../WAR2BNECD/setup.exe",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "task": {
+          "executable": "patch202",
+          "name": "wineexec",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "execute": {
+          "args": "-n $DISC/../WAR2BNECD/install.exe $GAMEDIR/$gamepath",
+          "file": "cp"
+        }
+      },
+      {
+        "execute": {
+          "command": "printf \"\\xeb\" | dd of=\"$GAMEDIR/$gamepath/storm.dll\" bs=1 count=1 seek=99962 conv=notrunc"
+        }
+      },
+      {
+        "task": {
+          "key": "War2CD",
+          "name": "set_regedit",
+          "path": "HKEY_LOCAL_MACHINE\\Software\\Blizzard Entertainment\\Warcraft II BNE",
+          "type": "REG_SZ",
+          "value": "$gamepathwin"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$GAMEDIR/$gamepath",
+          "src": "cncddraw"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum",
+    "variables": {
+      "cncddraw_sha256": "1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac",
+      "gamepath": "drive_c/Program Files/Warcraft II BNE",
+      "gamepathwin": "C:\\\\Program Files\\\\Warcraft II BNE",
+      "patch202_sha256": "194cdb4ea37aed678b095769ed9fc741d41d4d78f937fbee37734e9d6da5de19"
+    },
+    "wine": {
+      "overrides": {
+        "ddraw.dll": "n"
+      }
+    }
+  },
+  "content": "files:\n- patch202: https://harmony15.altervista.org/War2Patch/War2Patch_202.exe\n- cncddraw: https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip\ngame:\n  arch: win32\n  exe: $GAMEDIR/$gamepath/Warcraft II BNE.exe\n  prefix: $GAMEDIR\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- execute:\n    args: cncddraw $cncddraw_sha256\n    file: $CACHE/checkhash.sh\n- execute:\n    args: patch202 $patch202_sha256\n    file: $CACHE/checkhash.sh\n- insert-disc:\n    requires: ../WAR2BNECD/setup.exe\n- task:\n    executable: $DISC/../WAR2BNECD/setup.exe\n    name: wineexec\n    prefix: $GAMEDIR\n- task:\n    executable: patch202\n    name: wineexec\n    prefix: $GAMEDIR\n- execute:\n    args: -n $DISC/../WAR2BNECD/install.exe $GAMEDIR/$gamepath\n    file: cp\n- execute:\n    command: printf \"\\xeb\" | dd of=\"$GAMEDIR/$gamepath/storm.dll\" bs=1 count=1 seek=99962\n      conv=notrunc\n- task:\n    key: War2CD\n    name: set_regedit\n    path: HKEY_LOCAL_MACHINE\\Software\\Blizzard Entertainment\\Warcraft II BNE\n    type: REG_SZ\n    value: $gamepathwin\n- extract:\n    dst: $GAMEDIR/$gamepath\n    src: cncddraw\nrequire-binaries: sha256sum\nvariables:\n  cncddraw_sha256: 1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac\n  gamepath: drive_c/Program Files/Warcraft II BNE\n  gamepathwin: C:\\\\Program Files\\\\Warcraft II BNE\n  patch202_sha256: 194cdb4ea37aed678b095769ed9fc741d41d4d78f937fbee37734e9d6da5de19\nwine:\n  overrides:\n    ddraw.dll: n\n",
+  "discord_id": ""
+}

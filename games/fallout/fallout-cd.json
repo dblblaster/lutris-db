@@ -1,0 +1,174 @@
+{
+  "id": 35971,
+  "game_id": 381,
+  "game_slug": "fallout",
+  "name": "Fallout",
+  "year": 1997,
+  "user": "dblblaster",
+  "runner": "wine",
+  "slug": "fallout-cd",
+  "version": "CD",
+  "description": "Installs the game from CD and applies the last official patch (v1.1)",
+  "notes": "The v1.1 patch can be downloaded here: https://www.nma-fallout.com/resources/fallout-official-v1-1-patch-windows.50/download?version=51",
+  "credits": "",
+  "created_at": "2022-10-29T15:41:29.273022Z",
+  "updated_at": "2022-10-29T15:41:29.273045Z",
+  "draft": false,
+  "published": false,
+  "published_by": null,
+  "rating": "",
+  "is_playable": null,
+  "steamid": 38400,
+  "gogid": 1440166342,
+  "gogslug": "fallout",
+  "humbleid": "",
+  "humblestoreid": "",
+  "humblestoreid_real": "",
+  "script": {
+    "files": [
+      {
+        "patch11": "N/A: Please manually download \"fallup1w.zip\" (sha256: d5cdc2fe920032e2efc4b55b800ee26628346591a002f26f85100c57b077312a)"
+      },
+      {
+        "cncddraw": "https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip"
+      }
+    ],
+    "game": {
+      "arch": "win32",
+      "exe": "$GAMEDIR/$gamepath/falloutw.exe",
+      "prefix": "$GAMEDIR"
+    },
+    "installer": [
+      {
+        "write_file": {
+          "content": "#!/bin/bash\nfile=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\"; if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/checkhash.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "write_file": {
+          "content": "#!/bin/bash\ndir=\"$(dirname \"$1\")\"; fil=\"$(basename \"$1\")\"; lcfil=\"$(echo \"$fil\" | tr 'A-Z' 'a-z')\"; mv -nT \"$dir/$fil\" \"$dir/$lcfil\"\n",
+          "file": "$CACHE/lowercaps.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "+x $CACHE/lowercaps.sh",
+          "file": "chmod"
+        }
+      },
+      {
+        "execute": {
+          "args": "cncddraw $cncddraw_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "execute": {
+          "args": "patch11 $patch11_sha256",
+          "file": "$CACHE/checkhash.sh"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$CACHE/patch11",
+          "src": "patch11"
+        }
+      },
+      {
+        "extract": {
+          "dst": "$CACHE/fall11",
+          "src": "$CACHE/patch11/FALL11.ZIP"
+        }
+      },
+      {
+        "execute": {
+          "command": "find \"$CACHE/fall11\"/* -depth -exec \"$CACHE/lowercaps.sh\" {} \\;"
+        }
+      },
+      {
+        "insert-disc": {
+          "requires": "../FALLOUT/setup.exe"
+        }
+      },
+      {
+        "task": {
+          "arch": "win32",
+          "install_gecko": false,
+          "install_mono": false,
+          "name": "create_prefix",
+          "prefix": "$GAMEDIR"
+        }
+      },
+      {
+        "execute": {
+          "args": "-p $GAMEDIR/$gamepath/manual",
+          "file": "mkdir"
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -rn \"$DISC/../FALLOUT/manual/manual.pdf\" \"$GAMEDIR/$gamepath/manual/\""
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -rn \"$DISC/../FALLOUT\"/{data,critter.dat,master.dat,readme.txt} \"$GAMEDIR/$gamepath/\""
+        }
+      },
+      {
+        "execute": {
+          "args": "-R +rw $GAMEDIR/$gamepath",
+          "file": "chmod"
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -n \"$CACHE/patch11/PATCH.TXT\" \"$GAMEDIR/$gamepath/patch.txt\""
+        }
+      },
+      {
+        "execute": {
+          "command": "cp -rn \"$CACHE/fall11\"/* \"$GAMEDIR/$gamepath/\""
+        }
+      },
+      {
+        "extract": {
+          "dst": "$GAMEDIR/$gamepath",
+          "src": "cncddraw"
+        }
+      },
+      {
+        "write_file": {
+          "content": "[sound]\nmusic_path1=data\\sound\\music\\\nmusic_path2=data\\sound\\music\\\n\n[system]\ncritter_dat=critter.dat\ncritter_patches=data\nmaster_dat=master.dat\nmaster_patches=data\n",
+          "file": "$GAMEDIR/$gamepath/fallout.cfg"
+        }
+      },
+      {
+        "execute": {
+          "args": "-R +rw $GAMEDIR/$gamepath",
+          "file": "chmod"
+        }
+      }
+    ],
+    "require-binaries": "sha256sum",
+    "variables": {
+      "cncddraw_sha256": "1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac",
+      "gamepath": "drive_c/Program Files/Interplay/Fallout",
+      "patch11_sha256": "d5cdc2fe920032e2efc4b55b800ee26628346591a002f26f85100c57b077312a"
+    },
+    "wine": {
+      "overrides": {
+        "ddraw.dll": "n"
+      }
+    }
+  },
+  "content": "files:\n- patch11: 'N/A: Please manually download \"fallup1w.zip\" (sha256: d5cdc2fe920032e2efc4b55b800ee26628346591a002f26f85100c57b077312a)'\n- cncddraw: https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/v4.6.0.0/cnc-ddraw.zip\ngame:\n  arch: win32\n  exe: $GAMEDIR/$gamepath/falloutw.exe\n  prefix: $GAMEDIR\ninstaller:\n- write_file:\n    content: '#!/bin/bash\n\n      file=\"$1\"; hash=\"$2\"; echo \"[INFO] Verifying $(basename \"$file\") sha256 checksum...\";\n      if [ $(sha256sum \"$file\" | cut -c 1-64) = \"$hash\" ]; then echo \"[INFO] ...checksum\n      OK!\"; else echo \"[ERROR] ...checksum FAILED!\"; exit 1; fi\n\n      '\n    file: $CACHE/checkhash.sh\n- execute:\n    args: +x $CACHE/checkhash.sh\n    file: chmod\n- write_file:\n    content: '#!/bin/bash\n\n      dir=\"$(dirname \"$1\")\"; fil=\"$(basename \"$1\")\"; lcfil=\"$(echo \"$fil\" | tr ''A-Z''\n      ''a-z'')\"; mv -nT \"$dir/$fil\" \"$dir/$lcfil\"\n\n      '\n    file: $CACHE/lowercaps.sh\n- execute:\n    args: +x $CACHE/lowercaps.sh\n    file: chmod\n- execute:\n    args: cncddraw $cncddraw_sha256\n    file: $CACHE/checkhash.sh\n- execute:\n    args: patch11 $patch11_sha256\n    file: $CACHE/checkhash.sh\n- extract:\n    dst: $CACHE/patch11\n    src: patch11\n- extract:\n    dst: $CACHE/fall11\n    src: $CACHE/patch11/FALL11.ZIP\n- execute:\n    command: find \"$CACHE/fall11\"/* -depth -exec \"$CACHE/lowercaps.sh\" {} \\;\n- insert-disc:\n    requires: ../FALLOUT/setup.exe\n- task:\n    arch: win32\n    install_gecko: false\n    install_mono: false\n    name: create_prefix\n    prefix: $GAMEDIR\n- execute:\n    args: -p $GAMEDIR/$gamepath/manual\n    file: mkdir\n- execute:\n    command: cp -rn \"$DISC/../FALLOUT/manual/manual.pdf\" \"$GAMEDIR/$gamepath/manual/\"\n- execute:\n    command: cp -rn \"$DISC/../FALLOUT\"/{data,critter.dat,master.dat,readme.txt} \"$GAMEDIR/$gamepath/\"\n- execute:\n    args: -R +rw $GAMEDIR/$gamepath\n    file: chmod\n- execute:\n    command: cp -n \"$CACHE/patch11/PATCH.TXT\" \"$GAMEDIR/$gamepath/patch.txt\"\n- execute:\n    command: cp -rn \"$CACHE/fall11\"/* \"$GAMEDIR/$gamepath/\"\n- extract:\n    dst: $GAMEDIR/$gamepath\n    src: cncddraw\n- write_file:\n    content: '[sound]\n\n      music_path1=data\\sound\\music\\\n\n      music_path2=data\\sound\\music\\\n\n\n      [system]\n\n      critter_dat=critter.dat\n\n      critter_patches=data\n\n      master_dat=master.dat\n\n      master_patches=data\n\n      '\n    file: $GAMEDIR/$gamepath/fallout.cfg\n- execute:\n    args: -R +rw $GAMEDIR/$gamepath\n    file: chmod\nrequire-binaries: sha256sum\nvariables:\n  cncddraw_sha256: 1633d30bc80ecae60db97e881a4c804911e300dcb280d58ea8b8ddda2e1dd1ac\n  gamepath: drive_c/Program Files/Interplay/Fallout\n  patch11_sha256: d5cdc2fe920032e2efc4b55b800ee26628346591a002f26f85100c57b077312a\nwine:\n  overrides:\n    ddraw.dll: n\n",
+  "discord_id": "372825995084038144"
+}

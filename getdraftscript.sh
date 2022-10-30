@@ -12,10 +12,10 @@ mkdir -p "games/$game_slug"
 echo "$apiresponse" | jq > "games/$game_slug/$slug-rev$revision".json
 printf "### url\n\n$url\n\n" > "games/$game_slug/$slug-rev$revision".md
 printf "### game_slug\n\n$game_slug\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### runner\n\n$(echo "$apiresponse" | jq '.runner' | sed -e 's/^\"//g' -e 's/\"$//g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### version\n\n$(echo "$apiresponse" | jq '.version' | sed -e 's/^\"//g' -e 's/\"$//g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### description\n\n$(echo "$apiresponse" | jq '.description' | sed -e 's/^\"//g' -e 's/\"$//g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### notes\n\n\`\`\`\n$(echo "$apiresponse" | jq '.notes' | sed -e 's/^\"//g' -e 's/\"$//g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### credits\n\n\`\`\`\n$(echo "$apiresponse" | jq '.credits' | sed -e 's/^\"//g' -e 's/\"$//g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### reason\n\n\`\`\`\n$(echo "$apiresponse" | jq '.reason' | sed -e 's/^\"//g' -e 's/\"$//g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
-printf "### content\n\n\`\`\`\n$(echo "$apiresponse" | jq '.content' | sed -e 's/^\"//g' -e 's/\"$//g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### runner\n\n$(echo "$apiresponse" | jq '.runner' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### version\n\n$(echo "$apiresponse" | jq '.version' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### description\n\n$(echo "$apiresponse" | jq '.description' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### notes\n\n\`\`\`\n$(echo "$apiresponse" | jq '.notes' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### credits\n\n\`\`\`\n$(echo "$apiresponse" | jq '.credits' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### reason\n\n\`\`\`\n$(echo "$apiresponse" | jq '.reason' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
+printf "### content\n\n\`\`\`\n$(echo "$apiresponse" | jq '.content' | sed -e 's/^\"//g' -e 's/\"$//g' -e 's/%/%%/g')\n\`\`\`\n\n" >> "games/$game_slug/$slug-rev$revision".md
